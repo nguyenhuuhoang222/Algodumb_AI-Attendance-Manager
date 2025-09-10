@@ -1,4 +1,4 @@
-# name-project
+#Algodumb_AI-Attendance-Manager
 
 Hệ thống nhận diện khuôn mặt gồm 3 phần:
 
