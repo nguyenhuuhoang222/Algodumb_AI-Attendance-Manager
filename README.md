@@ -35,11 +35,6 @@ pip install -r requirements.txt
 streamlit run app.py
 ```
 
-## Biến môi trường gợi ý
-- `USER_SERVICE_URL` (streamlit secrets): URL của user-service, mặc định `http://localhost:5002/api`
-- `GOOGLE_APPLICATION_CREDENTIALS`: đường dẫn file service account
-- `FIREBASE_PROJECT_ID`: id dự án Firebase
-
 ## Kiến trúc & API
 Xem thêm trong thư mục **docs/**.
     
