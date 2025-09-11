@@ -1,0 +1,324 @@
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+Đặc tả yêu cầu phần mềm  
+Phiên bản 1.0  
+  
+Quản lý điểm 
+danh AI 
+ 
+Chủ  đề: Hệ thống điểm danh  thông minh s ử dụng nhận dạng khuôn m ặt 
+Tên dự án: AI Attendance Manager  
+Thể  loại: AI and Machine Learning Mania  
+
+ 
+ 
+© Công ty TNHH Aptech   
+Nội dung  
+1.1  Bối cảnh và sự cần thiết của ứng dụng  .............................................. 2 
+1.2  Giải pháp đề xuất  ............................................................................. 3 
+1.3  Mục đích của Tài liệu  ........................................................................ 6 
+1.4  Phạm vi của Dự án  ........................................................................... 6 
+1.5  Hạn chế  ........................................................................................... 7 
+1.6  Yêu cầu chức năng  ........................................................................... 7 
+1.7  Yêu cầu phi chức năng  ..................................................................... 9 
+1.8  Yêu cầu về giao diện  ....................................................................... 10 
+1.8.1  .......................................................................................... Phần cứng 
+ 10 
+1.8.2  ......................................................................................... Phần mềm 
+ 10 
+1.9  Sản phẩm dự án  ............................................................................. 11 
+ 
+  
+ 
+ 
+© Công ty TNHH Aptech  1.1  Bối cảnh và sự cần thiết của ứng dụng  
+ 
+Quản lý điểm danh là y ếu tố then chốt trong các cơ s ở giáo dục, ảnh hưởng trực tiếp đến hiệu 
+suất và kết quả học tập của học sinh . Các phương pháp truy ền thống đòi hỏi phải điểm danh 
+thủ công, tốn thời gian và d ễ xảy ra sai sót như đi ểm danh thay  và khó khăn khi l ớp học đông 
+học sinh. AI Attendance Manager hư ớng đến việc tự động hóa quy trình này, gi ảm khối lượng 
+công việc của giảng viên, c ải thiện độ chính xác và ngăn ng ừa điểm danh thay thông qua các 
+giải pháp thông minh và đư ợc điều khiển bởi AI.  
+ 
+' AI Attendance Manager ' lo ại bỏ yêu cầu chấm công th ủ công, ngăn chặ n điểm danh thay . 
+Ứng dụng này đáp ứng yêu cầu này bằng cách t ự động ghi nh ận sự tham gia c ủa học sinh 
+thông qua nhậ n dạng khuôn m ặt khi các em vào l ớp. Ứng dụng cũng theo dõi th ời gian vào 
+lớp và ra lớp, cho phép tính toán chính xác thờ i gian có mặ t của từng học sinh. Nh ờ sử dụng 
+nhận dạng khuôn m ặt, hệ thống đảm bảo tính xác th ực và loại bỏ khả năng điểm danh hộ . 
+Mục tiêu là cung c ấp một giải pháp đáng tin c ậy, bảo mật và dễ tiếp cận, giúp nâng cao hi ệu 
+quả quản lý lớp học tổng thể. 
+ 
+ 
+  
+ 
+ 
+ 
+
+ 
+ 
+© Công ty TNHH Aptech  1.2  Giải pháp đề xuất  
+ 
+Giải pháp đư ợc đề xuất giới thiệu một hệ thống điểm danh tiên ti ến, được hỗ trợ bởi AI, tận 
+dụng công ngh ệ nhận dạng khuôn m ặt để tự động hóa và b ảo mật quy trình đi ểm danh. B ằng 
+cách sử dụng mô -đun camera đư ợc lắp đặt trong lớp học, hệ thống sẽ chụp ảnh học sinh khi 
+các em vào l ớp. Những hình ảnh này sau đó đư ợc đối chiếu với cơ sở dữ liệu được lưu trữ 
+sẵn bằng thuật toán nh ận dạng khuôn m ặt. Khi tìm th ấy sự trùng khớp, hệ  thống sẽ tự động 
+ghi lại điểm danh c ủa học sinh, lo ại bỏ việc chấm điểm thủ công và giảm đáng k ể nguy cơ sai 
+sót.  
+ 
+AI Attendance Manager ch ấm điểm chính xác bằ ng cách xác minh chỉ  những học sinh có 
+mặt trực tiếp trong lớp học mới được ghi nhậ n là có m ặt, loại bỏ nguy cơ điể m danh thay. 
+Việc triển khai hứ a hẹn độ chính xác cao hơn, theo dõi thờ i gian thực và quy trình h ợp lý giúp 
+tiết kiệm thời gian cho gi ảng viên và nhân viên hành chính. B ằng cách t ự động hóa điểm danh  
+và cải thiện độ tin cậy của dữ  liệu, hệ thống giải quyết những thách thứ c thường gặp trong 
+các phương pháp truy ền thống và hỗ trợ môi trường học tập thông minh và hi ệu quả hơn.  
+  
+ 
+ Kiến trúc mẫ u cho ứng dụng AI Attendance Manager như sau:  
+ 
+
+ 
+ 
+© Công ty TNHH Aptech   
+ 
+ 
+Kiến trúc mẫu của ứng dụng 
+ 
+Giai đoạn phát tri ển ứng dụng bao gồm các bư ớc sau:  
+ Bướ c 1: Chụp khung hình video  
+Một camera đư ợc đặt ở lối vào lớp học để ghi lại hình ảnh rõ nét khuôn m ặt học sinh. Camera 
+ghi lại video ở tốc độ 30 khung hình/giây. Nhữ ng khung hình này đư ợc trích xu ất và sử dụng 
+cho quá trình x ử lý tiếp theo.  
+   
+
+ 
+ 
+© Công ty TNHH Aptech  Bướ c 2: Phát hi ện khuôn mặ t 
+Giai đoạn này bao g ồm việc phát hi ện giúp xác đị nh vị trí và kích thư ớc khuôn m ặt của học 
+sinh trong hình ảnh đã thu th ập. 
+ 
+Bướ c 3: Tiền xử lý hình ả nh 
+Tiền xử lý là cần thiết để cải thiện hình ảnh đầu vào và nâng cao ch ất lượng tổng thể của hình 
+ảnh. 
+ 
+Bướ c 4: Bộ huấn luyện 
+Phương pháp này bao g ồm việc so sánh các khuôn m ặt cần nhận dạng với khuôn m ặt giống 
+hệt trong tập dữ liệu đã được huấn luyện. Thuật toán được cung cấp sử dụng tập dữ liệu huấn 
+luyện để xác định một người thuộc nhóm nào. Thu ật toán dựa trên dữ liệu huấn luyện này để 
+thực hiện nhận dạng khuôn mặ t và đưa ra phân lo ại chính xác.  
+ 
+Bướ c 5: Nhận dạng khuôn mặ t 
+Thành phầ n nhận dạng khuôn m ặt đóng vai trò quan tr ọng trong h ệ thống. Nhận dạng khuôn 
+mặt là một phương thứ c tự động để  nhận dạng và xác thự c một người từ ảnh và video đư ợc 
+chụp bằng camera.  
+ Bước 6: Đánh d ấu sự tham dự 
+Điểm danh chỉ  được ghi nhận là có m ặt nếu khuôn m ặt từ một thư mục đã đăng ký c ụ thể 
+trùng khớp . Sau khi t ất cả học sinh có m ặt đã được điểm danh, nhữ ng học sinh còn l ại đã 
+đăng ký nhưng không đư ợc phát hiện sẽ tự động được ghi nhận là vắng mặt. 
+ 
+Gợi ý: Đối với dự án này, bạ n cần tạo tập dữ  liệu riêng bằng dữ  liệu hình ảnh thời gian thự c. 
+Ví dụ: hệ thống có thể được huấn luyện trên sáu họ c sinh khác nhau bằ ng cách chụ p hơn 
+100 ảnh cho m ỗi học sinh. Nh ững ảnh này cần được chuyển đổi sang ảnh xám và lưu v ới tên 
+và ID của từng học sinh. Xin lưu ý r ằng không có t ập dữ  liệu nào đư ợc cung cấ p trước cho 
+nhiệm vụ này.  
+ 
+ 
+ 
+© Công ty TNHH Aptech   
+ 
+1.3  Mục đích của Tài liệu  
+ 
+Mục đích củ a tài liệu này là phác thả o thiết kế, chức năng và k ế hoạch triển khai của Hệ 
+thống điểm danh  Thông minh s ử dụng Nhận dạng Khuôn m ặt được đề xuất. Tài liệu này đảm 
+bảo sự hiểu biết chung v ề các mục tiêu của dự  án và cung c ấp lộ trình có c ấu trúc cho vi ệc 
+phát triển và triển khai. Tài li ệu này dành cho c ả các bên liên quan và nhà phát tri ển ứng 
+dụng. 
+ 
+1.4  Phạm vi dự án  
+ 
+Phạm vi của dự  án này là thi ết kế và triển khai một hệ thống quản lý điểm danh dự a trên AI, 
+tự động hóa vi ệc điểm danh c ủa học sinh bằ ng công ngh ệ nhận dạng khuôn m ặt. Hệ thống 
+sẽ chụp ảnh học sinh tại lối vào lớp học, so sánh v ới cơ sở dữ liệu được lưu trữ và chấm điểm 
+theo thời gian thự c. Dự  án này nhằ m mục đích loại bỏ việc điểm danh hộ, giảm thiểu công 
+sức thủ công, đảm bảo tính chính xác và t ạo ra các báo cáo đi ểm danh đáng tin c ậy. Hơn 
+nữa, cần lưu ý rằng việc tích hợp hỗ  trợ với các hệ thống học thuật hiện có nằm ngoài ph ạm 
+vi của dự  án này.  
+
+ 
+ 
+© Công ty TNHH Aptech   
+ 
+1.5  Hạn chế  
+ 
+Dự án Quản lý Điểm danh AI g ặp phải một số hạn chế  nhất định, chẳng hạn như phụ  thuộc 
+vào điều kiện ánh sáng t ốt và vị trí đặt camera phù hợ p để  nhận dạng khuôn m ặt chính xác. 
+Hiệu quả của hệ thống cũng b ị hạn chế  bởi chất lượng và quy mô c ủa tập dữ  liệu đào tạo. 
+Các vấn đề  về quyền riêng tư liên quan đế n việc lưu trữ và xử  lý dữ liệu sinh trắc học cũng 
+cần được giải quyết theo các quy đ ịnh về bảo vệ dữ liệu. 
+ 
+1.6  Yêu cầu chức năng  
+ 
+Việc xây dựng một Hệ thống Quản lý Điểm danh AI bao g ồm nhiều bước và thành phầ n. Dưới 
+đây là các yêu c ầu chức năng để  phát triển một hệ thống như vậy: 
+i. Thu thập dữ  liệu - Hệ thống này sẽ thu thập và lưu tr ữ dữ liệu khuôn m ặt của học 
+sinh như m ột phần hồ sơ kỹ thuật số của họ  để có thể nhận dạng khuôn m ặt chính 
+xác nhằm theo dõi đi ểm danh t ự động. 
+ 
+ii. Phát hiện khuôn mặ t - Hệ thống sẽ chụp ảnh thời gian thự c bằng camera ở lối vào 
+lớp học và phát hi ện cũng như nhậ n dạng khuôn mặ t học sinh.  
+ 
+
+ 
+ 
+© Công ty TNHH Aptech  iii. Nhận dạng khuôn mặ t - Triển khai xác th ực nhận dạng khuôn m ặt để nhận dạng. 
+ 
+iv. Tiền xử lý dữ liệu - Làm sạch và xử lý sơ bộ dữ liệu để cải thiện độ chính xác c ủa hệ 
+thống nhận dạng. Việc này có th ể bao gồm nâng cao hình ảnh, thay đổ i kích thư ớc và 
+chuẩn hóa dữ  liệu. 
+ 
+v. Mô hình Họ c Máy - Huấn luyện Mô hình H ọc Máy (ví d ụ: Convolutional Neural 
+Network (CNN)) đ ể nhận diện khuôn m ặt. Bạn có thể sử dụng các mô hình đã đư ợc 
+huấn luyện trước và tinh ch ỉnh chúng cho t ập dữ  liệu cụ thể của mình.  
+ 
+vi. Nhận dạng học sinh - Hệ thống phải đối chiếu khuôn m ặt đã chụp với hình ảnh được 
+lưu trữ trong cơ s ở dữ liệu học sinh và nhậ n dạng học sinh bằ ng các mã đ ịnh danh 
+duy nhất như tên ho ặc ID.  
+ 
+vii. Điểm danh - Nếu tìm thấy kết quả trùng khớp, hệ  thống sẽ tự động đánh dấ u học 
+sinh là có mặ t. Nếu không, h ọc sinh sẽ được đánh dấ u là vắng mặ t. 
+ 
+viii. Ghi chép thờ i gian - Hệ thống sẽ ghi lại thời gian vào và ra c ủa từng học sinh để theo 
+dõi tổng thời gian học trên lớp. 
+ 
+ix. Lưu trữ dữ liệu - Thiết lập cơ sở dữ liệu để lưu trữ hồ sơ điểm danh một cách an 
+toàn. Cân nhắ c sử dụng cơ sở dữ liệu quan hệ hoặc cơ sở dữ liệu NoSQL, tùy thu ộc 
+vào yêu c ầu mở  rộng của bạn.  
+ 
+x. Giao diệ n ngườ i dùng - Phát triển giao diện thân thi ện để  người dùng điểm danh, 
+xem hồ sơ điểm danh và quản lý hệ thống. Đây có th ể là một ứng dụng dựa trên web.   
+ 
+xi. Bảng điều khiển quản trị - Hệ thống phải cung cấp bảng điều khiển cho giảng 
+viên/quả n trị viên để xem báo cáo đi ểm danh, xu ất dữ liệu và quản lý hồ sơ sinh viên.  
+ 
+xii. Ngăn chặ n gian lận điểm danh - Hệ thống phải đảm bảo mỗi khuôn m ặt là duy nh ất 
+và ngăn chặ n việc điểm danh nhi ều lần hoặc điểm danh h ộ. 
+ 
+xiii. Phân tích và báo cáo d ữ liệu - Triển khai phân tích dữ  liệu để tạo báo cáo về  tình 
+trạng tham d ự, vắng mặt và các s ố liệu liên quan khác.  
+  
+ 
+ 
+ 
+
+ 
+ 
+© Công ty TNHH Aptech  Ngoài ra, h ệ thống nên thi ết lập các công c ụ giám sát đ ể phát hiện các bất thường hoặc sự 
+cố trong hệ thống và cấu hình cảnh báo để  phản hồi kịp thời. Hệ thống cũng nên g ửi cảnh 
+báo về tình trạng điểm danh bấ t thường nếu cần. 
+ 
+1.7  Yêu cầu phi chức năng  
+ 
+Có một số  yêu cầu không mang tính ch ức năng mà ứ ng dụng phải đáp ứng như 
+sau:  
+1. Hiệu suất : Hệ thống phải xử lý và nhận diện khuôn m ặt của học sinh trong vòng hai 
+giây để đảm bảo giảm thiểu độ trễ trong quá trình đi ểm danh.  
+ 
+2. Có khả năng mở  rộng : Hệ thống phải có khả năng xử lý nhiều lớp học hoặc giảng 
+đường và nhận diện tới 1000 sinh viên mà không làm gi ảm hiệu suất. 
+ 
+3. Có thể sử dụng : Hệ thống phải có giao di ện trực quan và thân thi ện với người dùng, 
+quản trị viên, giáo viên và họ c sinh.  
+ 
+4. Độ chính xác : Thu ật toán nh ận dạng khuôn m ặt phải duy trì t ỷ lệ chính xác ít nhấ t 
+95% để đảm bảo hồ sơ chấm công đáng tin c ậy. 
+ 
+5. Khả dụng : Hệ thống phải khả dụng và hoạt động trong su ốt giờ làm việc với thời gian 
+hoạt động 99% đ ể đảm bảo theo dõi đi ểm danh liên tụ c. 
+ 
+ 
+ 
+ 
+
+ 
+ 
+© Công ty TNHH Aptech   
+ 
+ 
+ 
+  
+ 
+ 
+1.8  Yêu cầu về giao diện  
+ 
+1.8.1 Phần cứng  
+ 
+Bộ xử lý Intel Core i5/i7 tr ở lên 
+RAM 8 GB tr ở lên 
+Màn hình SVGA màu  
+Dung lượng ổ cứng 500 GB  
+Chuột và Bàn phím 
+ 
+1.8.2 Phần mềm  
+ 
+Công ngh ệ sẽ được sử dụng: 
+1. Frontend : HTML5/ Streamlit hoặc bất kỳ ngôn ngữ lập trình frontend 
+nào khác  
+2. Backend: Flask/Django 
+3. Kho dữ liệu : hình ảnh jpg 
+4. Cơ sở dữ liệu: Firebase/NoSQL  
+5. Lập trình/IDE : Python, Jupyter Notebook, Anaconda, Google Colab Đây là nh ững kỳ vọng tối thiểu của dự án. Việc thực hiện các yêu 
+cầu CHỨC NĂNG và PHI CH ỨC NĂNG đư ợc nêu trong SRS này là 
+bắt buộc. 
+ 
+Sau khi hoàn t ất, bạn có thể sử dụng khả năng sáng t ạo và trí tư ởng 
+tượng của mình đ ể thêm nhi ều tính năng hơn nếu c ần. 
+ 
+
+ 
+ 
+© Công ty TNHH Aptech  6. Thư viện : OpenCV, NumPy, Pandas, Matplotlib, Keras , Tensorflow , 
+PyTorch  
+ 
+ 
+ 
+1.9  Sản phẩm dự án  
+ 
+Bạn sẽ thiết kế và xây dựng dự án và nộp kèm theo báo cáo d ự án hoàn chỉ nh bao gồm: 
+ 
+● Định nghĩa v ấn đề 
+● Thông số kỹ thuật thiết kế 
+● Các sơ đ ồ như Dialog Flow 
+● Dữ liệu thử nghiệm được sử dụng trong d ự án 
+● Hướng dẫn cài đặt dự án 
+● Các bước thích hợp để thực hiện dự án 
+● Liên kết GitHub đ ể truy cập mã dự án đã tải lên (Liên k ết phải có quyền truy cập 
+công khai)  
+ 
+Mã nguồn, bao gồm các tệp .ipynb cho Jupyter Notebook và Google Colab , nên đư ợc chia 
+sẻ qua GitHub. Ngư ời dùng cần được cấp quyền truy cập phù hợ p để có thể thử nghiệm 
+Jupyter Notebook và Google Colab . D ự án hợp nhất phải được gửi lên GitHub kèm theo t ệp 
+ReadMe.doc li ệt kê các gi ả định (nếu có) do b ạn đưa ra.  
+
+ 
+ 
+© Công ty TNHH Aptech  Vui lòng cung c ấp URL GitHub nơi d ự án đã đư ợc tải lên để chia sẻ. Kho lưu tr ữ trên GitHub 
+phải có quyền truy cập công khai. Tài li ệu là một phần rất quan trọng của dự  án; do đó, t ất 
+cả các khía c ạnh quan tr ọng của dự  án phải được ghi chép đầ y đủ. Đảm bảo tài liệu đầy đủ 
+và toàn di ện. 
+Bạn nên đăng m ột blog tối thiểu 2000 từ trên bất kỳ trang web blog mi ễn phí nào như Blogger, 
+Tumblr, Ghost ho ặc bất kỳ trang web blog nào khác. Liên k ết đến blog đã đăng phả i được gửi 
+kèm theo tài li ệu dự án. 
+ 
+KHÔNG sao chép n ội dung ho ặc mã từ GPT hoặc các công cụ  AI khác, m ặc dù bạn được 
+phép sử dụng hình ảnh do công c ụ AI tạo ra cho b ất kỳ mục đích biểu diễn trực quan nào. 
+Việc đề cập đến các công c ụ đó là bắt buộc nếu bạn thêm b ất kỳ hình ảnh nào do AI t ạo ra.  
+Gửi video (tệp .mp4) trình bày cách thứ c hoạt động của ứng dụng, bao g ồm tất cả các chức 
+năng của dự  án. Điều này là B ẮT BUỘC. 
+ 
+ 
+~~~ Kết thúc tài li ệu ~~~  
