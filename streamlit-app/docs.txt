@@ -1,0 +1,25 @@
+# Run Guide / Hướng dẫn chạy
+
+## English
+1. Open terminal or PowerShell.
+2. Navigate to the `streamlit-app` folder:
+   ```bash
+   cd streamlit-app
+   ```
+3. Run the Streamlit app with:
+   ```bash
+   streamlit run app.py
+   ```
+4. The interface will open in your default web browser.
+
+## Tiếng Việt
+1. Mở terminal hoặc PowerShell.
+2. Di chuyển vào thư mục `streamlit-app`:
+   ```bash
+   cd streamlit-app
+   ```
+3. Chạy ứng dụng Streamlit bằng lệnh:
+   ```bash
+   streamlit run app.py
+   ```
+4. Giao diện sẽ được mở trong trình duyệt mặc định.
