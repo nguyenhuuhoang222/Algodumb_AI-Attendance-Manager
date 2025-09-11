@@ -1,0 +1,55 @@
+{
+  "timestamp": "2025-09-11 11:21:53",
+  "total_tests": 5,
+  "passed_tests": 5,
+  "accuracy": 100.0,
+  "details": [
+    {
+      "image": "no_face.jpg",
+      "status": "error",
+      "error_code": "NO_FACE_DETECTED",
+      "mask_detected": false,
+      "confidence": 0.0,
+      "processing_time": 775.1688957214355,
+      "expected_mask": false,
+      "correct": true
+    },
+    {
+      "image": "person1.jpg",
+      "status": "success",
+      "mask_detected": false,
+      "confidence": 0.0,
+      "processing_time": 377.32672691345215,
+      "expected_mask": false,
+      "correct": true
+    },
+    {
+      "image": "person1_2.jpg",
+      "status": "success",
+      "mask_detected": false,
+      "confidence": 0.0,
+      "processing_time": 423.1569766998291,
+      "expected_mask": false,
+      "correct": true
+    },
+    {
+      "image": "person1_with_mask.png",
+      "status": "error",
+      "error_code": "FACE_MASK_DETECTED",
+      "mask_detected": true,
+      "confidence": 0.9,
+      "processing_time": 444.34404373168945,
+      "expected_mask": true,
+      "correct": true
+    },
+    {
+      "image": "person2.jpg",
+      "status": "success",
+      "mask_detected": false,
+      "confidence": 0.0,
+      "processing_time": 444.05484199523926,
+      "expected_mask": false,
+      "correct": true
+    }
+  ]
+}

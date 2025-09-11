@@ -1,116 +1,183 @@
 import requests
 import os
 import time
-from typing import List, Optional
+import sys
+from typing import List, Optional, Tuple, Dict
 
 class FaceIDTester:
     def __init__(self, base_url="http://localhost:5000"):
         self.base_url = base_url
         self.test_results = []
+        print(f"Initializing tester with base URL: {base_url}")
     
-    def test_health_check(self):
+    def test_health_check(self) -> bool:
         """Test health check endpoint"""
         try:
+            print("Testing health check...")
             response = requests.get(f"{self.base_url}/health", timeout=10)
-            result = response.status_code == 200 and response.json()["status"] == "healthy"
-            self.test_results.append(("Health Check", result, "Service status checked"))
-            return result
+            print(f"Health check response: {response.status_code}")
+            if response.status_code == 200:
+                result = response.json().get("status") == "healthy"
+                self.test_results.append(("Health Check", result, "Service status checked"))
+                return result
+            else:
+                self.test_results.append(("Health Check", False, f"HTTP {response.status_code}"))
+                return False
         except Exception as e:
+            print(f"Health check error: {str(e)}")
             self.test_results.append(("Health Check", False, str(e)))
             return False
     
-    def test_encode_face(self, image_path: str, should_succeed: bool = True) -> Optional[str]:
+    def test_encode_face(self, image_path: str, expected_success: bool = True) -> Optional[str]:
         """Test encoding a face with expected outcome"""
+        test_name = f"Encode: {os.path.basename(image_path)}"
+        if not expected_success:
+            test_name += " (expected fail)"
+        
+        print(f"Testing: {test_name}")
+        
         try:
+            if not os.path.exists(image_path):
+                self.test_results.append((test_name, False, f"File not found: {image_path}"))
+                return None
+            
             with open(image_path, 'rb') as f:
-                files = {'image': f}
-                response = requests.post(f"{self.base_url}/encode-face", files=files, timeout=30)
+                response = requests.post(f"{self.base_url}/encode-face", 
+                                       files={'image': f}, timeout=30)
             
-            success = response.status_code == 200 and "embedding" in response.json()
+            print(f"Encode response: {response.status_code}")
             
-           
-            result = (success == should_succeed)
+            if response.status_code == 200:
+                success = "embedding" in response.json()
+                if expected_success:
+                    result = success
+                    details = "Success" if success else "No embedding in response"
+                else:
+                    result = False  # Should have failed but succeeded
+                    details = "Unexpected success"
+            else:
+                success = False
+                if expected_success:
+                    result = False  # Should have succeeded but failed
+                    error_msg = response.json().get('message', 'Unknown error')
+                    details = f"Failed: {error_msg}"
+                else:
+                    result = True  # Expected to fail and it did
+                    error_code = response.json().get('error', '')
+                    details = f"Properly rejected: {error_code}"
             
-            test_name = f"Encode Face: {os.path.basename(image_path)}"
-            if not should_succeed:
-                test_name += " (no face expected)"
-            
-            details = "Success" if success else "No face detected - expected" if not should_succeed else "Unexpected failure"
             self.test_results.append((test_name, result, details))
             
             return response.json().get("embedding") if success else None
             
         except Exception as e:
-            error_msg = f"Error: {str(e)}" 
-            if "No faces detected" in str(e) and not should_succeed:
-                # This is actually a PASS for no-face images
-                self.test_results.append((f"Encode Face: {os.path.basename(image_path)} (no face expected)", True, "Correctly detected no face"))
-                return None
-            else:
-                self.test_results.append((f"Encode Face: {os.path.basename(image_path)}", False, error_msg))
-                return None
+            error_msg = f"Error: {str(e)}"
+            print(f"Exception in {test_name}: {error_msg}")
+            self.test_results.append((test_name, False, error_msg))
+            return None
     
     def test_compare_faces(self, embedding1: str, embedding2: str, expected_match: bool) -> bool:
         """Test face comparison with expected outcome"""
         try:
+            print("Testing face comparison...")
             response = requests.post(f"{self.base_url}/compare-faces", json={
                 "embedding1": embedding1,
                 "embedding2": embedding2
             }, timeout=20)
             
+            print(f"Compare response: {response.status_code}")
+            
             if response.status_code == 200:
-                match = response.json()["match"]
-                similarity = response.json().get("similarity", 0)
-                result = (match == expected_match)
+                result_data = response.json()
+                match = result_data.get("match", False)
+                similarity = result_data.get("similarity", 0)
                 
-                details = f"Match: {match}, Similarity: {similarity:.3f}, Expected: {expected_match}"
-                self.test_results.append((f"Face Comparison", result, details))
+                result = (match == expected_match)
+                details = f"Match: {match} (expected: {expected_match}), Similarity: {similarity:.3f}"
+                
+                self.test_results.append(("Face Comparison", result, details))
                 return result
-            return False
+            else:
+                error_msg = response.json().get('message', 'Unknown error')
+                self.test_results.append(("Face Comparison", False, f"HTTP {response.status_code}: {error_msg}"))
+                return False
             
         except Exception as e:
-            self.test_results.append((f"Face Comparison", False, str(e)))
+            error_msg = f"Error: {str(e)}"
+            print(f"Exception in face comparison: {error_msg}")
+            self.test_results.append(("Face Comparison", False, error_msg))
             return False
     
-    def run_optimized_test(self, test_images_folder: str):
-        """Run optimized test suite without duplicates"""
-        print("Running FaceID Model Test")
-        print("-" * 50)
+    def run_comprehensive_test(self, test_images_folder: str):
+        """Run comprehensive test suite"""
+        print("=" * 60)
+        print("Running Comprehensive FaceID Test")
+        print("=" * 60)
         
+        # First check if service is running
         if not self.test_health_check():
-            print("Health check failed, service not running.")
+            print("Health check failed. Please start the service with: python app.py")
             return False
         
-        all_images = [f for f in os.listdir(test_images_folder) 
-                     if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
-        unique_images = list(dict.fromkeys(all_images))
-        
-        if len(unique_images) < 2:
-            print("Not enough images for testing (need >= 2).")
+        if not os.path.exists(test_images_folder):
+            print(f"Test folder '{test_images_folder}' not found")
             return False
         
-        print(f"Found {len(unique_images)} test images")
+        images = [f for f in os.listdir(test_images_folder) 
+                 if f.lower().endswith(('.png', '.jpg', '.jpeg'))]
         
-        person_images, no_face_images = [], []
+        if not images:
+            print("No test images found")
+            return False
         
-        for img_file in unique_images:
-            img_path = os.path.join(test_images_folder, img_file)
-            
-            if 'no_face' in img_file.lower():
-                self.test_encode_face(img_path, should_succeed=False)
-                no_face_images.append(img_file)
+        print(f"Found {len(images)} test images: {', '.join(images)}")
+        
+        # Categorize images
+        person_images = []
+        mask_images = []
+        no_face_images = []
+        
+        for img in images:
+            img_lower = img.lower()
+            if 'mask' in img_lower:
+                mask_images.append(img)
+            elif 'no_face' in img_lower:
+                no_face_images.append(img)
             else:
-                embedding = self.test_encode_face(img_path, should_succeed=True)
-                if embedding:
-                    person_images.append((img_file, embedding))
+                person_images.append(img)
         
-        if len(person_images) >= 1:
-            img1, emb1 = person_images[0]
+        print(f"Person images: {len(person_images)}")
+        print(f"Mask images: {len(mask_images)}")
+        print(f"No-face images: {len(no_face_images)}")
+        
+        # Test mask images (should fail)
+        for mask_img in mask_images:
+            img_path = os.path.join(test_images_folder, mask_img)
+            self.test_encode_face(img_path, expected_success=False)
+        
+        # Test no-face images (should fail)
+        for no_face_img in no_face_images:
+            img_path = os.path.join(test_images_folder, no_face_img)
+            self.test_encode_face(img_path, expected_success=False)
+        
+        # Test person images (should succeed)
+        embeddings = []
+        for person_img in person_images:
+            img_path = os.path.join(test_images_folder, person_img)
+            embedding = self.test_encode_face(img_path, expected_success=True)
+            if embedding:
+                embeddings.append((person_img, embedding))
+        
+        # Test comparisons
+        if len(embeddings) >= 1:
+            img1, emb1 = embeddings[0]
+            # Self-comparison
             self.test_compare_faces(emb1, emb1, expected_match=True)
         
-        if len(person_images) >= 2:
-            img1, emb1 = person_images[0]
-            img2, emb2 = person_images[1]
+        if len(embeddings) >= 2:
+            img1, emb1 = embeddings[0]
+            img2, emb2 = embeddings[1]
+            # Cross-comparison
             self.test_compare_faces(emb1, emb2, expected_match=False)
         
         self.print_results()
@@ -118,38 +185,62 @@ class FaceIDTester:
     
     def print_results(self):
         """Print formatted test results"""
-        print("\nTest Results")
-        print("-" * 50)
+        print("\n" + "=" * 60)
+        print("Test Results")
+        print("=" * 60)
+        
         for test_name, result, details in self.test_results:
             status = "PASS" if result else "FAIL"
-            print(f"[{status}] {test_name} - {details}")
+            print(f"{status} {test_name}")
+            print(f"   {details}")
+            print()
     
     def calculate_success(self) -> bool:
         """Calculate overall test success"""
         total_tests = len(self.test_results)
         passed_tests = sum(1 for _, result, _ in self.test_results if result)
-        accuracy = (passed_tests / total_tests * 100) if total_tests > 0 else 0
         
-        print("-" * 50)
-        print(f"Summary: {passed_tests}/{total_tests} passed ({accuracy:.1f}%)")
+        if total_tests == 0:
+            print("No tests completed")
+            return False
+        
+        accuracy = (passed_tests / total_tests) * 100
+        
+        print("=" * 60)
+        print(f"SUMMARY: {passed_tests}/{total_tests} tests passed ({accuracy:.1f}%)")
         
         if accuracy == 100:
-            print("All tests passed.")
+            print("ALL TESTS PASSED!")
+            return True
         elif accuracy >= 80:
-            print("Most tests passed.")
+            print("GOOD - Most tests passed")
+            return True
+        elif accuracy >= 60:
+            print("FAIR - Some tests failed")
+            return False
         else:
-            print("Many tests failed.")
-        
-        return accuracy == 100
+            print("POOR - Many tests failed")
+            return False
 
-
-# Run the optimized test
+# Run the test
 if __name__ == "__main__":
+    # Check if service is running first
+    try:
+        response = requests.get("http://localhost:5000/health", timeout=5)
+        if response.status_code == 200:
+            print("Service is running")
+        else:
+            print("Service returned error status")
+    except:
+        print("Service is not running. Please start it with: python app.py")
+        sys.exit(1)
+    
     tester = FaceIDTester()
     
     test_folder = "test_images"
     if not os.path.exists(test_folder):
-        os.makedirs(test_folder)
-        print(f"Created {test_folder} folder. Please add test images.")
-    else:
-        success = tester.run_optimized_test(test_folder)
+        print(f"Test folder '{test_folder}' not found")
+        sys.exit(1)
+    
+    success = tester.run_comprehensive_test(test_folder)
+    sys.exit(0 if success else 1)
