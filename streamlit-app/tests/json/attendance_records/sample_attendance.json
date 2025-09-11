@@ -1,0 +1,167 @@
+[
+  {
+    "id": "att_001",
+    "user_id": "usr_001",
+    "status": "present",
+    "captured_image": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+    "timestamp": "2025-09-11T10:05:00Z",
+    "note": "On time",
+    "first_seen": "2025-09-11T10:04:55Z",
+    "last_seen": "2025-09-11T10:05:05Z",
+    "captures": 1
+  },
+  {
+    "id": "att_002",
+    "user_id": "usr_002",
+    "status": "absent",
+    "captured_image": "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg",
+    "timestamp": "2025-09-11T10:10:00Z",
+    "note": "Late",
+    "first_seen": "2025-09-11T10:09:30Z",
+    "last_seen": "2025-09-11T10:10:30Z",
+    "captures": 1
+  },
+  {
+    "id": "att_003",
+    "user_id": "usr_003",
+    "status": "present",
+    "captured_image": "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
+    "timestamp": "2025-09-11T08:35:00Z",
+    "note": "",
+    "first_seen": "2025-09-11T08:34:55Z",
+    "last_seen": "2025-09-11T08:35:05Z",
+    "captures": 1
+  },
+  {
+    "id": "att_004",
+    "user_id": "usr_004",
+    "status": "present",
+    "captured_image": "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg",
+    "timestamp": "2025-09-11T07:20:00Z",
+    "note": "Used side camera",
+    "first_seen": "2025-09-11T07:19:55Z",
+    "last_seen": "2025-09-11T07:20:05Z",
+    "captures": 1
+  },
+  {
+    "id": "att_005",
+    "user_id": "usr_005",
+    "status": "absent",
+    "captured_image": "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
+    "timestamp": "2025-09-11T06:15:00Z",
+    "note": "No show",
+    "first_seen": "2025-09-11T06:14:50Z",
+    "last_seen": "2025-09-11T06:15:05Z",
+    "captures": 0
+  },
+  {
+    "id": "att_006",
+    "user_id": "usr_006",
+    "status": "present",
+    "captured_image": "https://images.pexels.com/photos/428340/pexels-photo-428340.jpeg",
+    "timestamp": "2025-09-11T05:50:00Z",
+    "note": "",
+    "first_seen": "2025-09-11T05:49:55Z",
+    "last_seen": "2025-09-11T05:50:05Z",
+    "captures": 1
+  },
+  {
+    "id": "att_007",
+    "user_id": "usr_007",
+    "status": "present",
+    "captured_image": "https://images.pexels.com/photos/220687/pexels-photo-220687.jpeg",
+    "timestamp": "2025-09-11T04:35:00Z",
+    "note": "Missed previous day",
+    "first_seen": "2025-09-11T04:34:55Z",
+    "last_seen": "2025-09-11T04:35:05Z",
+    "captures": 1
+  },
+  {
+    "id": "att_008",
+    "user_id": "usr_008",
+    "status": "absent",
+    "captured_image": "https://images.pexels.com/photos/1680175/pexels-photo-1680175.jpeg",
+    "timestamp": "2025-09-11T03:20:00Z",
+    "note": "Camera issue",
+    "first_seen": "2025-09-11T03:19:55Z",
+    "last_seen": "2025-09-11T03:20:05Z",
+    "captures": 0
+  },
+  {
+    "id": "att_009",
+    "user_id": "usr_009",
+    "status": "present",
+    "captured_image": "https://images.pexels.com/photos/712521/pexels-photo-712521.jpeg",
+    "timestamp": "2025-09-11T02:05:00Z",
+    "note": "",
+    "first_seen": "2025-09-11T02:04:55Z",
+    "last_seen": "2025-09-11T02:05:05Z",
+    "captures": 1
+  },
+  {
+    "id": "att_010",
+    "user_id": "usr_010",
+    "status": "present",
+    "captured_image": "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg",
+    "timestamp": "2025-09-10T23:50:00Z",
+    "note": "Camera shifted",
+    "first_seen": "2025-09-10T23:49:55Z",
+    "last_seen": "2025-09-10T23:50:05Z",
+    "captures": 1
+  },
+  {
+    "id": "att_011",
+    "user_id": "usr_011",
+    "status": "absent",
+    "captured_image": "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
+    "timestamp": "2025-09-10T22:35:00Z",
+    "note": "Forgot badge",
+    "first_seen": "2025-09-10T22:34:50Z",
+    "last_seen": "2025-09-10T22:35:05Z",
+    "captures": 0
+  },
+  {
+    "id": "att_012",
+    "user_id": "usr_012",
+    "status": "present",
+    "captured_image": "https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg",
+    "timestamp": "2025-09-10T21:20:00Z",
+    "note": "Good lighting",
+    "first_seen": "2025-09-10T21:19:55Z",
+    "last_seen": "2025-09-10T21:20:05Z",
+    "captures": 1
+  },
+  {
+    "id": "att_013",
+    "user_id": "usr_013",
+    "status": "present",
+    "captured_image": "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg",
+    "timestamp": "2025-09-10T20:05:00Z",
+    "note": "",
+    "first_seen": "2025-09-10T20:04:55Z",
+    "last_seen": "2025-09-10T20:05:05Z",
+    "captures": 1
+  },
+  {
+    "id": "att_014",
+    "user_id": "usr_014",
+    "status": "present",
+    "captured_image": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+    "timestamp": "2025-09-10T18:50:00Z",
+    "note": "Smile",
+    "first_seen": "2025-09-10T18:49:55Z",
+    "last_seen": "2025-09-10T18:50:05Z",
+    "captures": 1
+  },
+  {
+    "id": "att_015",
+    "user_id": "usr_015",
+    "status": "absent",
+    "captured_image": "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+    "timestamp": "2025-09-10T17:35:00Z",
+    "note": "No show",
+    "first_seen": "2025-09-10T17:34:55Z",
+    "last_seen": "2025-09-10T17:35:05Z",
+    "captures": 0
+  }
+]

@@ -1,0 +1,137 @@
+[
+  {
+    "id": "usr_001",
+    "name": "Alice Smith",
+    "email": "alice.smith@example.com",
+    "face_encoding": [0.12, -0.04, 0.33],
+    "image_path": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+    "created_at": "2025-09-11T10:00:00Z",
+    "updated_at": "2025-09-11T10:00:00Z"
+  },
+  {
+    "id": "usr_002",
+    "name": "Bob Johnson",
+    "email": "bob.johnson@example.com",
+    "face_encoding": [-0.25, 0.10, 0.44],
+    "image_path": "https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg",
+    "created_at": "2025-09-11T09:50:00Z",
+    "updated_at": "2025-09-11T09:50:00Z"
+  },
+  {
+    "id": "usr_003",
+    "name": "Cathy Lee",
+    "email": "cathy.lee@example.com",
+    "face_encoding": [0.45, -0.10, 0.20],
+    "image_path": "https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg",
+    "created_at": "2025-09-11T08:30:00Z",
+    "updated_at": "2025-09-11T08:30:00Z"
+  },
+  {
+    "id": "usr_004",
+    "name": "David Tan",
+    "email": "david.tan@example.com",
+    "face_encoding": [0.05, 0.78, -0.14],
+    "image_path": "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg",
+    "created_at": "2025-09-11T07:15:00Z",
+    "updated_at": "2025-09-11T07:15:00Z"
+  },
+  {
+    "id": "usr_005",
+    "name": "Elena González",
+    "email": "elena.gonzalez@example.com",
+    "face_encoding": [-0.35, 0.30, 0.60],
+    "image_path": "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
+    "created_at": "2025-09-11T06:00:00Z",
+    "updated_at": "2025-09-11T06:00:00Z"
+  },
+  {
+    "id": "usr_006",
+    "name": "Farid Ahmed",
+    "email": "farid.ahmed@example.com",
+    "face_encoding": [0.00, 0.55, -0.45],
+    "image_path": "https://images.pexels.com/photos/428340/pexels-photo-428340.jpeg",
+    "created_at": "2025-09-11T05:45:00Z",
+    "updated_at": "2025-09-11T05:45:00Z"
+  },
+  {
+    "id": "usr_007",
+    "name": "Grace Li",
+    "email": "grace.li@example.com",
+    "face_encoding": [0.90, -0.15, 0.12],
+    "image_path": "https://images.pexels.com/photos/220687/pexels-photo-220687.jpeg",
+    "created_at": "2025-09-11T04:30:00Z",
+    "updated_at": "2025-09-11T04:30:00Z"
+  },
+  {
+    "id": "usr_008",
+    "name": "Hiro Tanaka",
+    "email": "hiro.tanaka@example.com",
+    "face_encoding": [-0.10, 0.90, 0.05],
+    "image_path": "https://images.pexels.com/photos/1680175/pexels-photo-1680175.jpeg",
+    "created_at": "2025-09-11T03:15:00Z",
+    "updated_at": "2025-09-11T03:15:00Z"
+  },
+  {
+    "id": "usr_009",
+    "name": "Ivy Patel",
+    "email": "ivy.patel@example.com",
+    "face_encoding": [0.33, -0.22, 0.44],
+    "image_path": "https://images.pexels.com/photos/712521/pexels-photo-712521.jpeg",
+    "created_at": "2025-09-11T02:00:00Z",
+    "updated_at": "2025-09-11T02:00:00Z"
+  },
+  {
+    "id": "usr_010",
+    "name": "Jack Ma",
+    "email": "jack.ma@example.com",
+    "face_encoding": [-0.60, 0.15, 0.25],
+    "image_path": "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg",
+    "created_at": "2025-09-10T23:45:00Z",
+    "updated_at": "2025-09-10T23:45:00Z"
+  },
+  {
+    "id": "usr_011",
+    "name": "Kiran Singh",
+    "email": "kiran.singh@example.com",
+    "face_encoding": [0.22, 0.11, -0.55],
+    "image_path": "https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg",
+    "created_at": "2025-09-10T22:30:00Z",
+    "updated_at": "2025-09-10T22:30:00Z"
+  },
+  {
+    "id": "usr_012",
+    "name": "Linh Nguyen",
+    "email": "linh.nguyen@example.com",
+    "face_encoding": [0.77, -0.30, 0.05],
+    "image_path": "https://images.pexels.com/photos/1704488/pexels-photo-1704488.jpeg",
+    "created_at": "2025-09-10T21:15:00Z",
+    "updated_at": "2025-09-10T21:15:00Z"
+  },
+  {
+    "id": "usr_013",
+    "name": "Marco Rossi",
+    "email": "marco.rossi@example.com",
+    "face_encoding": [-0.15, 0.40, 0.35],
+    "image_path": "https://images.pexels.com/photos/428340/pexels-photo-428340.jpeg",
+    "created_at": "2025-09-10T20:00:00Z",
+    "updated_at": "2025-09-10T20:00:00Z"
+  },
+  {
+    "id": "usr_014",
+    "name": "Nina Petrova",
+    "email": "nina.petrova@example.com",
+    "face_encoding": [0.66, -0.22, 0.10],
+    "image_path": "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+    "created_at": "2025-09-10T18:45:00Z",
+    "updated_at": "2025-09-10T18:45:00Z"
+  },
+  {
+    "id": "usr_015",
+    "name": "Oscar Wilde",
+    "email": "oscar.wilde@example.com",
+    "face_encoding": [0.40, 0.40, -0.20],
+    "image_path": "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg",
+    "created_at": "2025-09-10T17:30:00Z",
+    "updated_at": "2025-09-10T17:30:00Z"
+  }
+]
