@@ -156,6 +156,84 @@ def compare_faces():
             "message": f"Face comparison failed: {str(e)}"
         }), 400
 
+@app.route('/verify-liveness', methods=['POST'])
+def verify_liveness():
+    """Endpoint specifically for liveness detection"""
+    try:
+        if 'image' not in request.files:
+            return jsonify({
+                "success": False,
+                "error": "NO_IMAGE_PROVIDED",
+                "message": "No image provided"
+            }), 400
+        
+        image_file = request.files['image']
+        if image_file.filename == '':
+            return jsonify({
+                "success": False,
+                "error": "EMPTY_FILE", 
+                "message": "No image selected"
+            }), 400
+        
+        # Read and validate image
+        image_bytes = image_file.read()
+        if len(image_bytes) == 0:
+            return jsonify({
+                "success": False,
+                "error": "EMPTY_IMAGE",
+                "message": "Empty image file"
+            }), 400
+        
+        # Process image
+        image = face_service.process_image(image_bytes)
+        
+        # Convert to RGB for Insightface
+        rgb_image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        
+        # Detect faces
+        faces = face_service.recognizer.get(rgb_image)
+        
+        if len(faces) == 0:
+            return jsonify({
+                "success": False,
+                "error": "NO_FACE_DETECTED",
+                "message": "No faces detected in the image"
+            }), 400
+        
+        if len(faces) > 1:
+            return jsonify({
+                "success": False,
+                "error": "MULTIPLE_FACES",
+                "message": "Multiple faces detected. Please use an image with only one face"
+            }), 400
+        
+        # Get the first face
+        face = faces[0]
+        bbox = face.bbox.astype(int)
+        
+        # Check for mask
+        has_mask, mask_confidence = face_service._check_for_mask(image, bbox)
+        
+        # Check for spoofing
+        is_real, spoof_confidence = face_service._check_for_spoof(image, bbox)
+        
+        return jsonify({
+            "success": True,
+            "mask_detected": has_mask,
+            "mask_confidence": mask_confidence,
+            "is_real": is_real,
+            "spoof_confidence": spoof_confidence,
+            "message": "Liveness verification completed"
+        })
+        
+    except Exception as e:
+        logger.error(f"Error in verify_liveness: {str(e)}")
+        return jsonify({
+            "success": False,
+            "error": "LIVENESS_VERIFICATION_ERROR",
+            "message": f"Liveness verification failed: {str(e)}"
+        }), 400
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({

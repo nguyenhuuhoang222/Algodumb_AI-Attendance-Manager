@@ -7,6 +7,10 @@ import base64
 from typing import Dict, Tuple, Optional, List
 import time
 
+# Import new modules
+from utils.mask_detector import mask_detector
+from utils.anti_spoofing import anti_spoofing
+
 logger = logging.getLogger(__name__)
 
 class FaceService:
@@ -56,62 +60,25 @@ class FaceService:
             raise Exception(f"Invalid image format: {str(e)}")
     
     def _check_for_mask(self, image: np.ndarray, face_bbox: List[int]) -> Tuple[bool, float]:
-        """Check if the detected face might be wearing a mask - IMPROVED VERSION"""
+        """Use the dedicated mask detector"""
         try:
-            x1, y1, x2, y2 = face_bbox
-            face_region = image[y1:y2, x1:x2]
-            
-            if face_region.size == 0:
-                return False, 0.0
-            
-            height, width = face_region.shape[:2]
-            
-            # Only check lower part of face for masks
-            lower_face = face_region[int(height*0.6):, :]
-            
-            if lower_face.size == 0:
-                return False, 0.0
-            
-            # Convert to different color spaces for better analysis
-            gray_lower = cv2.cvtColor(lower_face, cv2.COLOR_BGR2GRAY)
-            hsv_lower = cv2.cvtColor(lower_face, cv2.COLOR_BGR2HSV)
-            
-            # Calculate multiple features
-            features = []
-            
-            # 1. Color variance (masks often have uniform color)
-            color_variance = np.var(lower_face)
-            features.append(min(color_variance / 500, 1.0))  # Normalize
-            
-            # 2. Texture analysis (masks have different texture)
-            texture_var = cv2.Laplacian(gray_lower, cv2.CV_64F).var()
-            features.append(min((100 - texture_var) / 100, 1.0))  # Lower texture = more likely mask
-            
-            # 3. Saturation analysis (masks often have low saturation)
-            saturation_mean = np.mean(hsv_lower[:,:,1])
-            features.append(min((50 - saturation_mean) / 50, 1.0))  # Lower saturation = more likely mask
-            
-            # 4. Edge density (masks may have fewer edges in mouth area)
-            edges = cv2.Canny(gray_lower, 100, 200)
-            edge_density = np.sum(edges > 0) / edges.size
-            features.append(min((0.1 - edge_density) / 0.1, 1.0))  # Fewer edges = more likely mask
-            
-            # Weighted average with more weight on texture and edges
-            weights = [0.2, 0.4, 0.2, 0.2]  # Texture has highest weight
-            mask_confidence = sum(w * f for w, f in zip(weights, features))
-            
-            # Apply sigmoid-like function to make it less sensitive
-            mask_confidence = 1 / (1 + np.exp(-10 * (mask_confidence - 0.5)))
-            
-            # Only return positive if confidence is high enough
-            return mask_confidence > 0.7, float(mask_confidence)
-            
+            result = mask_detector.detect_mask(image, face_bbox)
+            return result["mask_detected"], result["confidence"]
         except Exception as e:
-            logger.warning(f"Mask detection check failed: {str(e)}")
+            logger.warning(f"Mask detection failed: {str(e)}")
             return False, 0.0
     
+    def _check_for_spoof(self, image: np.ndarray, face_bbox: List[int]) -> Tuple[bool, float]:
+        """Check if face is real or spoofed using DeepFace"""
+        try:
+            is_real, confidence = anti_spoofing.check_spoof(image, face_bbox)
+            return is_real, confidence
+        except Exception as e:
+            logger.warning(f"Spoof detection failed: {str(e)}")
+            return True, 0.5  # Default to real if check fails
+    
     def extract_face_embedding(self, image_bytes):
-        """Extract face embedding using Insightface with IMPROVED mask detection"""
+        """Extract face embedding with mask and spoof detection"""
         try:
             # Process image
             image = self.process_image(image_bytes)
@@ -132,16 +99,15 @@ class FaceService:
             face = faces[0]
             bbox = face.bbox.astype(int)
             
-            # Check for mask before proceeding - WITH IMPROVED DETECTION
+            # Check for mask
             has_mask, mask_confidence = self._check_for_mask(image, bbox)
             if has_mask:
-                # Additional verification: check if face detection score is high
-                # Real faces usually have high detection scores, masked faces might have lower
-                if face.det_score > 0.8:  # High confidence face detection
-                    logger.warning(f"High confidence face detected but mask suspected. Score: {face.det_score}, Mask confidence: {mask_confidence}")
-                    # Might be false positive, proceed with caution
-                else:
-                    raise Exception(f"Face mask detected (confidence: {mask_confidence:.2f}). Please remove mask for recognition.")
+                raise Exception(f"Face mask detected (confidence: {mask_confidence:.2f}). Please remove mask for recognition.")
+            
+            # Check for spoofing
+            is_real, spoof_confidence = self._check_for_spoof(image, bbox)
+            if not is_real:
+                raise Exception(f"Possible spoof attack detected (confidence: {spoof_confidence:.2f}). Please use a real face.")
             
             # Extract face region for debugging
             x1, y1, x2, y2 = bbox
