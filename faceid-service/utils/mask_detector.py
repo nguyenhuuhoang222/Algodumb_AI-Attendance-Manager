@@ -34,7 +34,7 @@ class MaskDetector:
             mask_confidence = self._analyze_mask_indicators(face_region, gray_face)
             
             return {
-                "mask_detected": mask_confidence > 0.4,  # Hạ từ 0.6 xuống 0.4 để phát hiện dễ hơn
+                "mask_detected": mask_confidence > 0.4,  # Lowered from 0.6 to 0.4 to detect easier
                 "confidence": float(mask_confidence),
                 "bbox": face_bbox,
                 "region_size": f"{face_region.shape[1]}x{face_region.shape[0]}"

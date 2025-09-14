@@ -4,18 +4,18 @@ from datetime import datetime
 from typing import Dict, Any
 
 class StructuredLogger:
-    # Logger có cấu trúc cho user-service
+    # Structured logger for user-service
 
     def __init__(self, name: str = "user-service"):
         self.logger = logging.getLogger(name)
         self.logger.setLevel(logging.INFO)
         
-        # Tạo formatter
+        # Create formatter
         formatter = logging.Formatter(
             '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
         )
         
-        # Tạo handler
+        # Create handler
         handler = logging.StreamHandler()
         handler.setFormatter(formatter)
         self.logger.addHandler(handler)
@@ -44,7 +44,7 @@ class StructuredLogger:
         self.logger.info(json.dumps(log_data))
     
     def log_face_recognition(self, action: str, user_id: str = None, similarity: float = None, **kwargs):
-        # Log hoạt động nhận dạng khuôn mặt
+        # Log face recognition activity
         log_data = {
             "type": "face_recognition",
             "action": action,
@@ -56,7 +56,7 @@ class StructuredLogger:
         self.logger.info(json.dumps(log_data))
     
     def log_error(self, error: str, user_id: str = None, **kwargs):
-        # Log lỗi
+        # Log error
         log_data = {
             "type": "error",
             "error": error,
@@ -66,5 +66,5 @@ class StructuredLogger:
         }
         self.logger.error(json.dumps(log_data))
 
-# Tạo instance global
+# Create global instance
 logger = StructuredLogger()

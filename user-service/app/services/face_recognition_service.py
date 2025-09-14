@@ -6,26 +6,26 @@ from ..config.settings import Config
 from ..utils.logger import logger
 
 class FaceRecognitionService:
-    # Service gọi faceid-service để xử lý nhận dạng khuôn mặt
+    # Service calling faceid-service to handle face recognition
 
     def __init__(self):
         self.faceid_url = Config.FACEID_SERVICE_URL
         self.timeout = Config.FACEID_TIMEOUT / 1000  # Convert to seconds
     
     def encode_face(self, image_bytes: bytes) -> Dict[str, Any]:
-        # Gọi faceid-service để encode khuôn mặt
+        # Call faceid-service to encode face
         try:
-            # 1. Chuẩn bị file upload
+            # 1. Prepare file upload
             files = {'image': ('face.jpg', image_bytes, 'image/jpeg')}
             
-            # 2. Gọi API encode-face
+            # 2. Call API encode-face
             response = requests.post(
                 f"{self.faceid_url}/encode-face",
                 files=files,
                 timeout=self.timeout
             )
             
-            # 3. Xử lý response thành công
+            # 3. Process successful response
             if response.status_code == 200:
                 data = response.json()
                 if data.get('success'):
@@ -38,10 +38,10 @@ class FaceRecognitionService:
                 else:
                     return {
                         'success': False,
-                        'error': data.get('error', 'Lỗi không xác định')
+                        'error': data.get('error', 'Unknown error')
                     }
             else:
-                # 4. Xử lý HTTP error
+                # 4. Handle HTTP error
                 return {
                     'success': False,
                     'error': f"HTTP {response.status_code}: {response.text}"
@@ -51,23 +51,23 @@ class FaceRecognitionService:
             logger.log_error("FaceID service timeout")
             return {
                 'success': False,
-                'error': 'FaceID service không phản hồi'
+                'error': 'FaceID service not responding'
             }
         except requests.exceptions.ConnectionError:
             logger.log_error("FaceID service connection error")
             return {
                 'success': False,
-                'error': 'Không thể kết nối FaceID service'
+                'error': 'Cannot connect to FaceID service'
             }
         except Exception as e:
             logger.log_error("FaceID service error")
             return {
                 'success': False,
-                'error': f'Lỗi gọi FaceID service: {str(e)}'
+                'error': f'Error calling FaceID service: {str(e)}'
             }
     
     def compare_faces(self, embedding1: str, embedding2: str) -> Dict[str, Any]:
-        # So sánh 2 face embeddings
+        # Compare 2 face embeddings
         try:
             data = {
                 'embedding1': embedding1,
@@ -92,7 +92,7 @@ class FaceRecognitionService:
                 else:
                     return {
                         'success': False,
-                        'error': result.get('error', 'Lỗi so sánh')
+                        'error': result.get('error', 'Comparison error')
                     }
             else:
                 return {
@@ -104,11 +104,11 @@ class FaceRecognitionService:
             logger.log_error("Face comparison error")
             return {
                 'success': False,
-                'error': f'Lỗi so sánh khuôn mặt: {str(e)}'
+                'error': f'Face comparison error: {str(e)}'
             }
     
     def find_matching_users(self, embedding: str, users: List[Dict], threshold: float = None) -> List[Dict]:
-        # Tìm users khớp với embedding
+        # Find users matching embedding
         if threshold is None:
             threshold = Config.MATCH_THRESHOLD
         
@@ -118,7 +118,7 @@ class FaceRecognitionService:
             if not user.get('face_encoding'):
                 continue
                 
-            # So sánh với embedding của user
+            # Compare with user's embedding
             compare_result = self.compare_faces(embedding, user['face_encoding'])
             
             if compare_result['success'] and compare_result['match']:
@@ -130,7 +130,7 @@ class FaceRecognitionService:
                     'distance': 1 - compare_result['similarity']
                 })
         
-        # Sắp xếp theo similarity giảm dần
+        # Sort by similarity descending
         matches.sort(key=lambda x: x['similarity'], reverse=True)
         
         logger.log_face_recognition(
@@ -141,7 +141,7 @@ class FaceRecognitionService:
         return matches
     
     def health_check(self) -> bool:
-        # Kiểm tra faceid-service có hoạt động không
+        # Check if faceid-service is working
         try:
             response = requests.get(
                 f"{self.faceid_url}/health",

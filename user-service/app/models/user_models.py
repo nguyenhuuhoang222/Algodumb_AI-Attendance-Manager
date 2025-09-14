@@ -39,7 +39,7 @@ from datetime import datetime
 
 @dataclass
 class User:
-    # Model cho thông tin học sinh
+    # Model for student information
     id: str
     name: str
     email: str
@@ -50,7 +50,7 @@ class User:
     
     @classmethod
     def from_dict(cls, data: dict, doc_id: str) -> 'User':
-        # Tạo User từ Firestore document    
+        # Create User from Firestore document    
         return cls(
             id=doc_id,
             name=data.get('name', ''),
@@ -62,7 +62,7 @@ class User:
         )
     
     def to_dict(self) -> dict:
-        # Chuyển User thành dict cho Firestore
+        # Convert User to dict for Firestore
         return {
             'id': self.id,
             'name': self.name,
@@ -75,22 +75,22 @@ class User:
 
 @dataclass
 class AttendanceRecord:
-    # Model cho bản ghi điểm danh
+    # Model for attendance record
     id: str
     user_id: str
-    status: str  # "present" hoặc "absent"
+    status: str  # "present" or "absent"
     captured_image: str
-    timestamp: datetime  # Thời gian điểm danh (thời gian thực)
+    timestamp: datetime  # Attendance time (real time)
     note: Optional[str] = None
     
-    # Các trường bổ sung cho tracking chi tiết
-    first_seen: Optional[datetime] = None  # Lần đầu thấy (nếu có)
-    last_seen: Optional[datetime] = None   # Lần cuối thấy (nếu có)
-    captures: int = 1  # Số lần chụp (mặc định 1)
+    # Additional fields for detailed tracking
+    first_seen: Optional[datetime] = None  # First seen (if any)
+    last_seen: Optional[datetime] = None   # Last seen (if any)
+    captures: int = 1  # Number of captures (default 1)
     
     @classmethod
     def from_dict(cls, data: dict, doc_id: str) -> 'AttendanceRecord':
-        # Tạo AttendanceRecord từ Firestore document
+        # Create AttendanceRecord from Firestore document
         return cls(
             id=doc_id,
             user_id=data.get('user_id', ''),
@@ -104,7 +104,7 @@ class AttendanceRecord:
         )
     
     def to_dict(self) -> dict:
-        # Chuyển AttendanceRecord thành dict cho Firestore
+        # Convert AttendanceRecord to dict for Firestore
         return {
             'user_id': self.user_id,
             'status': self.status,

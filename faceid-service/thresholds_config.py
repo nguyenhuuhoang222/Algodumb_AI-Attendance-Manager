@@ -1,33 +1,33 @@
 """
-Cấu hình ngưỡng phát hiện khuôn mặt
-Hạ ngưỡng để dễ dàng kiểm tra ảnh động và tĩnh
+Face detection threshold configuration
+Lower thresholds to make it easier to check dynamic and static images
 """
 
-# Pose Detection (Góc nghiêng khuôn mặt) - Tăng ngưỡng để dễ dàng hơn
-POSE_MAX_YAW = 60.0      # Góc nghiêng trái/phải (tăng từ 50.0)
-POSE_MAX_PITCH = 55.0    # Góc nghiêng lên/xuống (tăng từ 45.0)
-POSE_MAX_ROLL = 55.0     # Góc xoay (tăng từ 45.0)
+# Pose Detection (Face tilt angle) - Increase threshold to make it easier
+POSE_MAX_YAW = 60.0      # Left/right tilt angle (increased from 50.0)
+POSE_MAX_PITCH = 55.0    # Up/down tilt angle (increased from 45.0)
+POSE_MAX_ROLL = 55.0     # Rotation angle (increased from 45.0)
 
-# Quality Detection (Chất lượng ảnh) - Hạ ngưỡng để dễ dàng hơn
-QUALITY_MIN_SHARPNESS = 0.12  # Độ sắc nét tối thiểu (hạ từ 0.18)
-QUALITY_MIN_EXPOSURE = 0.15   # Độ sáng tối thiểu (hạ từ 0.25)
-QUALITY_MIN_AREA = 0.05       # Diện tích khuôn mặt tối thiểu (hạ từ 0.08)
+# Quality Detection (Image quality) - Lower threshold to make it easier
+QUALITY_MIN_SHARPNESS = 0.12  # Minimum sharpness (lowered from 0.18)
+QUALITY_MIN_EXPOSURE = 0.15   # Minimum brightness (lowered from 0.25)
+QUALITY_MIN_AREA = 0.05       # Minimum face area (lowered from 0.08)
 
-# Liveness Detection (Phát hiện người thật) - Hạ ngưỡng để dễ dàng hơn
-LIVENESS_MIN_SCORE = 0.02     # Ngưỡng liveness tối thiểu (hạ từ 0.05)
-LIVENESS_TOLERANCE = 0.15     # Tolerance cho liveness (tăng từ 0.10)
+# Liveness Detection (Real person detection) - Lower threshold to make it easier
+LIVENESS_MIN_SCORE = 0.02     # Minimum liveness threshold (lowered from 0.05)
+LIVENESS_TOLERANCE = 0.15     # Liveness tolerance (increased from 0.10)
 
-# Mask Detection (Phát hiện khẩu trang) - Tăng ngưỡng để phát hiện khẩu trang chặt chẽ hơn
-MASK_CONF_THRESHOLD = 0.5     # Ngưỡng phát hiện khẩu trang (hạ từ 0.7 để phát hiện dễ hơn)
-MASK_SKIN_RATIO_THRESHOLD = 0.25  # Ngưỡng tỷ lệ da (tăng từ 0.15 để phát hiện dễ hơn)
-MASK_CONSECUTIVE_FRAMES = 3   # Số frame liên tiếp để xác nhận mask (hạ từ 5 để phát hiện nhanh hơn)
+# Mask Detection (Mask detection) - Increase threshold to detect masks more strictly
+MASK_CONF_THRESHOLD = 0.5     # Mask detection threshold (lowered from 0.7 to detect easier)
+MASK_SKIN_RATIO_THRESHOLD = 0.25  # Skin ratio threshold (increased from 0.15 to detect easier)
+MASK_CONSECUTIVE_FRAMES = 3   # Number of consecutive frames to confirm mask (lowered from 5 to detect faster)
 
 # Video Processor Thresholds
-READINESS_THRESHOLD = 0.05    # Ngưỡng sẵn sàng chụp ảnh (hạ từ 0.1)
-MOTION_FRAMES_REQUIRED = 2    # Số frame motion cần thiết (hạ từ 3)
+READINESS_THRESHOLD = 0.05    # Ready to capture image threshold (lowered from 0.1)
+MOTION_FRAMES_REQUIRED = 2    # Number of motion frames required (lowered from 3)
 
-# Face Comparison Thresholds - Tăng ngưỡng để kiểm tra trùng mặt chặt chẽ hơn
-FACE_SIMILARITY_THRESHOLD = 0.8  # Ngưỡng so sánh khuôn mặt (tăng từ 0.6 lên 0.8)
+# Face Comparison Thresholds - Increase threshold to check face matching more strictly
+FACE_SIMILARITY_THRESHOLD = 0.8  # Face comparison threshold (increased from 0.6 to 0.8)
 
 # Feature Flags
 ENABLE_QUALITY = True
@@ -36,5 +36,5 @@ ENABLE_LIVENESS = True
 ENABLE_MASK = True
 BLOCK_STRICT = True
 
-# Debug Mode - Bật để xem chi tiết quá trình xử lý
+# Debug Mode - Enable to see detailed processing
 DEBUG_MODE = True

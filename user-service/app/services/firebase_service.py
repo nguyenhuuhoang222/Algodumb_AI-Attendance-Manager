@@ -10,10 +10,9 @@ import json
 from datetime import datetime
 
 class FirebaseService:
-    # Service để kết nối và tương tác với Firebase Firestore
+    # Service to connect and interact with Firebase Firestore
 
     def __init__(self):
-<<<<<<< HEAD
         env_project_id = os.getenv("FIREBASE_PROJECT_ID")
         env_credentials_path = os.getenv("GOOGLE_APPLICATION_CREDENTIALS")
 
@@ -59,25 +58,6 @@ class FirebaseService:
     def save_user(self, user):
         self._ensure_db()
         user_data = {
-=======
-        # 1. Lấy project ID từ environment variable
-        project_id = os.getenv("FIREBASE_PROJECT_ID")
-        # 2. Tạo client mặc định (sử dụng GOOGLE_APPLICATION_CREDENTIALS)
-        self.db = firestore.Client(project=project_id) if project_id else None
-
-    def save_user(self, user):
-        # Lưu thông tin user vào Firestore hoặc file local
-        if not self.db:
-            # 3. Chế độ demo: lưu tạm vào file JSON cục bộ
-            os.makedirs("user-service_data", exist_ok=True)
-            path = os.path.join("user-service_data", f"{user.username}.json")
-            import json
-            with open(path, "w", encoding="utf-8") as f:
-                json.dump({"username": user.username, "embedding": user.embedding}, f, ensure_ascii=False)
-            return
-        # 4. Lưu vào Firestore collection "users"
-        self.db.collection("users").document(user.username).set({
->>>>>>> 3486913fee80855a8b8bce9ab0e74324417a0c27
             "username": user.username,
             "embedding": user.embedding,
             "student_id": getattr(user, 'student_id', None),
@@ -91,20 +71,7 @@ class FirebaseService:
         self.db.collection("users").document(user.username).set(user_data)
 
     def get_user(self, username: str) -> Optional[dict]:
-<<<<<<< HEAD
         self._ensure_db()
-=======
-        # Lấy thông tin user từ Firestore hoặc file local
-        if not self.db:
-            # 5. Chế độ demo: đọc từ file JSON cục bộ
-            path = os.path.join("user-service_data", f"{username}.json")
-            if os.path.exists(path):
-                import json
-                with open(path, "r", encoding="utf-8") as f:
-                    return json.load(f)
-            return None
-        # 6. Đọc từ Firestore collection "users"
->>>>>>> 3486913fee80855a8b8bce9ab0e74324417a0c27
         doc = self.db.collection("users").document(username).get()
         return doc.to_dict() if doc.exists else None
     

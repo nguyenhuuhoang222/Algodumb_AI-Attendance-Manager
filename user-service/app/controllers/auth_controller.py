@@ -455,7 +455,7 @@ user_service = UserService()
 
 @auth_bp.route("/users/register", methods=["POST"])
 def register_user():
-    # Đăng ký học sinh mới với thông tin cơ bản và ảnh khuôn mặt
+    # Register new student with basic information and face image
     start_time = time.time()
     
     try:
@@ -488,11 +488,11 @@ def register_user():
         response_time = (time.time() - start_time) * 1000
         logger.log_error(str(e))
         logger.log_response(status_code=500, response_time=response_time)
-        return jsonify({"success": False, "error": "Lỗi server"}), 500
+        return jsonify({"success": False, "error": "Server error"}), 500
 
 @auth_bp.route("/users/<user_id>", methods=["GET"])
 def get_user(user_id):
-    # Lấy thông tin học sinh theo ID
+    # Get student information by ID
     start_time = time.time()
     
     try:
@@ -514,26 +514,26 @@ def get_user(user_id):
                 }
             }), 200
         else:
-            return jsonify({"success": False, "error": "Không tìm thấy học sinh"}), 404
+            return jsonify({"success": False, "error": "Student not found"}), 404
             
     except Exception as e:
         response_time = (time.time() - start_time) * 1000
         logger.log_error(str(e))
         logger.log_response(status_code=500, response_time=response_time)
-        return jsonify({"success": False, "error": "Lỗi server"}), 500
+        return jsonify({"success": False, "error": "Server error"}), 500
 
 @auth_bp.route("/users/<user_id>/face", methods=["PUT"])
 def update_user_face(user_id):
-    # Cập nhật ảnh khuôn mặt cho học sinh đã có
+    # Update face image for existing student
     start_time = time.time()
     
     try:
         if 'file' not in request.files:
-            return jsonify({"success": False, "error": "Thiếu file ảnh"}), 400
+            return jsonify({"success": False, "error": "Missing image file"}), 400
         
         file = request.files['file']
         if file.filename == '':
-            return jsonify({"success": False, "error": "Chưa chọn ảnh"}), 400
+            return jsonify({"success": False, "error": "No image selected"}), 400
         
         result = user_service.update_user_face(user_id, file)
         
@@ -550,11 +550,11 @@ def update_user_face(user_id):
         response_time = (time.time() - start_time) * 1000
         logger.log_error(str(e))
         logger.log_response(status_code=500, response_time=response_time)
-        return jsonify({"success": False, "error": "Lỗi server"}), 500
+        return jsonify({"success": False, "error": "Server error"}), 500
 
 @auth_bp.route("/users", methods=["GET"])
 def get_all_users():
-    # Lấy danh sách tất cả học sinh
+    # Get list of all students
     start_time = time.time()
     
     try:
@@ -584,17 +584,17 @@ def get_all_users():
         response_time = (time.time() - start_time) * 1000
         logger.log_error(str(e))
         logger.log_response(status_code=500, response_time=response_time)
-        return jsonify({"success": False, "error": "Lỗi server"}), 500
+        return jsonify({"success": False, "error": "Server error"}), 500
 
 @auth_bp.route("/users/search", methods=["GET"])
 def search_users():
-    # Tìm kiếm học sinh theo tên
+    # Search students by name
     start_time = time.time()
     
     try:
         name = request.args.get('name', '')
         if not name:
-            return jsonify({"success": False, "error": "Thiếu tham số name"}), 400
+            return jsonify({"success": False, "error": "Missing name parameter"}), 400
         
         users = user_service.search_users_by_name(name)
         
@@ -622,5 +622,5 @@ def search_users():
         response_time = (time.time() - start_time) * 1000
         logger.log_error(str(e))
         logger.log_response(status_code=500, response_time=response_time)
-        return jsonify({"success": False, "error": "Lỗi server"}), 500
+        return jsonify({"success": False, "error": "Server error"}), 500
 >>>>>>> 3486913fee80855a8b8bce9ab0e74324417a0c27

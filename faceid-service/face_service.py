@@ -220,12 +220,12 @@ class FaceService:
             # Apply sigmoid-like function; center slightly lower to be more sensitive
             mask_confidence = 1 / (1 + np.exp(-10 * (mask_confidence - 0.45)))
             
-            # Hard rule: if skin ratio is very low, immediately flag mask - Tăng ngưỡng để phát hiện dễ hơn
-            if skin_ratio < 0.30:  # Tăng từ 0.20 lên 0.30
+            # Hard rule: if skin ratio is very low, immediately flag mask - Increase threshold to detect easier
+            if skin_ratio < 0.30:  # Increased from 0.20 to 0.30
                 return True, float(max(mask_confidence, 0.85))
             
-            # Return positive for moderately strict threshold - Hạ ngưỡng để phát hiện dễ hơn
-            return mask_confidence > 0.4, float(mask_confidence)  # Hạ từ 0.6 xuống 0.4
+            # Return positive for moderately strict threshold - Lower threshold to detect easier
+            return mask_confidence > 0.4, float(mask_confidence)  # Lowered from 0.6 to 0.4
             
         except Exception as e:
             logger.warning(f"Mask detection check failed: {str(e)}")
@@ -308,7 +308,7 @@ class FaceService:
                 lv = liveness_score(face_region_rgb)
                 scores["liveness"] = float(lv)
                 min_live = float(min_liveness_override) if (min_liveness_override is not None) else self.liveness_min_score
-                # Allow larger tolerance to avoid boundary false rejects - sử dụng config
+                # Allow larger tolerance to avoid boundary false rejects - using config
                 eff_min = max(0.0, min_live - getattr(self, 'liveness_tolerance', 0.15))
                 ok_live = passes_liveness(lv, min_score=eff_min)
                 if not ok_live:

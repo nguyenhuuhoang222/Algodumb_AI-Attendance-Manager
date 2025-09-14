@@ -49,7 +49,7 @@ streamlit-app/
    ```
 
 2. **Start Services**
-   - Start FaceID Service (port 5000)
+   - Start FaceID Service (port 5001)
    - Start User Service (port 5002)
 
 3. **Run Application**
@@ -60,7 +60,7 @@ streamlit-app/
 ## Configuration
 
 ### Environment Variables
-- `FACEID_SERVICE_URL` - FaceID service URL (default: http://localhost:5000)
+- `FACEID_SERVICE_URL` - FaceID service URL (default: http://localhost:5001)
 - `USER_SERVICE_URL` - User service URL (default: http://localhost:5002)
 
 ### Service Integration

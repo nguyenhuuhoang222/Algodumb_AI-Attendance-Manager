@@ -53,11 +53,11 @@ class ReadinessProcessor(VideoProcessorBase):
             self.mask_skin_ratio_threshold = MASK_SKIN_RATIO_THRESHOLD
             self.mask_consecutive_frames = MASK_CONSECUTIVE_FRAMES
         except ImportError:
-            # Fallback to hardcoded values - Tăng ngưỡng phát hiện khẩu trang
+            # Fallback to hardcoded values - Increase mask detection threshold
             self.readiness_threshold = 0.05
             self.motion_frames_required = 2
-            self.mask_skin_ratio_threshold = 0.25  # Tăng từ 0.15 để phát hiện dễ hơn
-            self.mask_consecutive_frames = 3       # Hạ từ 5 để phát hiện nhanh hơn
+            self.mask_skin_ratio_threshold = 0.25  # Increased from 0.15 to detect easier
+            self.mask_consecutive_frames = 3       # Lowered from 5 to detect faster
         
         self.prev_gray = None
         self.motion_ok_consec = 0

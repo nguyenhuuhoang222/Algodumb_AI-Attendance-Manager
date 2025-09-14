@@ -1,5 +1,5 @@
 """
-Controllers package - Chứa các controller xử lý business logic
+Controllers package - Contains controllers handling business logic
 """
 from .api_controller import APIController, api_controller
 

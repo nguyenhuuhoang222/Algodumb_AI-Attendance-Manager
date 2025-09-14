@@ -10,7 +10,7 @@ from ..utils.logger import logger
 from ..config.settings import Config
 
 class AttendanceService:
-    # Service xử lý logic nghiệp vụ cho Attendance
+    # Service handling business logic for Attendance
 
     def __init__(self):
         self.user_repo = UserRepository()
@@ -19,33 +19,33 @@ class AttendanceService:
         self.storage_service = StorageService()
     
     def mark_attendance_single(self, image_file, user_id: str = None, note: str = None) -> Dict[str, Any]:
-        # Điểm danh cho 1 khuôn mặt
+        # Mark attendance for 1 face
         try:
-            # Validate ảnh
+            # Validate image
             image_bytes = image_file.read()
             image_file.seek(0)
             
             if not validate_image_format(image_bytes):
-                return {"success": False, "error": "Định dạng ảnh không hợp lệ"}
+                return {"success": False, "error": "Invalid image format"}
             
             size_check = validate_image_size(image_file, 5242880)
             if not size_check["valid"]:
                 return {"success": False, "error": size_check["message"]}
             
-            # Resize ảnh
+            # Resize image
             resized_image = resize_image(image_bytes, (640, 480))
             
-            # Gọi faceid-service để encode
+            # Call faceid-service to encode
             encode_result = self.face_service.encode_face(resized_image)
             if not encode_result["success"]:
-                return {"success": False, "error": f"Lỗi nhận dạng khuôn mặt: {encode_result['error']}"}
+                return {"success": False, "error": f"Face recognition error: {encode_result['error']}"}
             
-            # Tìm user khớp
+            # Find matching user
             if user_id:
-                # Nếu có user_id, so sánh trực tiếp
+                # If user_id exists, compare directly
                 user = self.user_repo.get_user_by_id(user_id)
                 if not user:
-                    return {"success": False, "error": "Không tìm thấy học sinh"}
+                    return {"success": False, "error": "Student not found"}
                 
                 compare_result = self.face_service.compare_faces(
                     encode_result["embedding"],
@@ -53,11 +53,11 @@ class AttendanceService:
                 )
                 
                 if not compare_result["success"] or not compare_result["match"]:
-                    return {"success": False, "error": "Khuôn mặt không khớp với học sinh"}
+                    return {"success": False, "error": "Face does not match student"}
                 
                 matched_user = user
             else:
-                # Tìm trong tất cả users
+                # Search in all users
                 all_users = self.user_repo.get_all_users()
                 user_dicts = [user.to_dict() for user in all_users]
                 
@@ -68,11 +68,11 @@ class AttendanceService:
                 )
                 
                 if not matches:
-                    return {"success": False, "error": "Không tìm thấy học sinh khớp"}
+                    return {"success": False, "error": "No matching student found"}
                 
                 matched_user = self.user_repo.get_user_by_id(matches[0]["user_id"])
             
-            # Upload ảnh điểm danh
+            # Upload attendance image
             today = date.today().strftime("%Y-%m-%d")
             attendance_image_url = self.storage_service.upload_attendance_image(
                 resized_image,
@@ -81,9 +81,9 @@ class AttendanceService:
             )
             
             if not attendance_image_url:
-                return {"success": False, "error": "Lỗi upload ảnh điểm danh"}
+                return {"success": False, "error": "Error uploading attendance image"}
             
-            # Ghi điểm danh
+            # Record attendance
             attendance_id = self.attendance_repo.upsert_daily_attendance(
                 matched_user.id,
                 today,
@@ -105,36 +105,36 @@ class AttendanceService:
                 "name": matched_user.name,
                 "email": matched_user.email,
                 "similarity": matches[0]["similarity"] if not user_id else compare_result["similarity"],
-                "message": "Điểm danh thành công"
+                "message": "Attendance marked successfully"
             }
             
         except Exception as e:
             logger.log_error("Attendance marking error")
-            return {"success": False, "error": f"Lỗi điểm danh: {str(e)}"}
+            return {"success": False, "error": f"Attendance error: {str(e)}"}
     
     def mark_attendance_multi(self, image_file, note: str = None, class_id: str = None) -> Dict[str, Any]:
-        # Điểm danh cho nhiều khuôn mặt trong 1 ảnh
+        # Mark attendance for multiple faces in 1 image
         try:
-            # 1. Validate ảnh
+            # 1. Validate image
             image_bytes = image_file.read()
             image_file.seek(0)
             
             if not validate_image_format(image_bytes):
-                return {"success": False, "error": "Định dạng ảnh không hợp lệ"}
+                return {"success": False, "error": "Invalid image format"}
             
             size_check = validate_image_size(image_file, 5242880)
             if not size_check["valid"]:
                 return {"success": False, "error": size_check["message"]}
             
-            # 2. Resize ảnh
+            # 2. Resize image
             resized_image = resize_image(image_bytes, (640, 480))
             
-            # 3. Gọi faceid-service để encode
+            # 3. Call faceid-service to encode
             encode_result = self.face_service.encode_face(resized_image)
             if not encode_result["success"]:
-                return {"success": False, "error": f"Lỗi nhận dạng khuôn mặt: {encode_result['error']}"}
+                return {"success": False, "error": f"Face recognition error: {encode_result['error']}"}
             
-            # 4. Tìm users khớp (có thể filter theo class_id nếu có)
+            # 4. Find matching users (can filter by class_id if provided)
             if class_id:
                 # TODO: Implement filter by class_id when class management is added
                 all_users = self.user_repo.get_all_users()
@@ -153,16 +153,16 @@ class AttendanceService:
                     "success": True,
                     "date": date.today().strftime("%Y-%m-%d"),
                     "results": [],
-                    "message": "Không tìm thấy học sinh nào khớp"
+                    "message": "No matching students found"
                 }
             
-            # Xử lý từng match
+            # Process each match
             results = []
             today = date.today().strftime("%Y-%m-%d")
             
             for match in matches:
                 try:
-                    # Upload ảnh điểm danh
+                    # Upload attendance image
                     attendance_image_url = self.storage_service.upload_attendance_image(
                         resized_image,
                         match["user_id"],
@@ -170,7 +170,7 @@ class AttendanceService:
                     )
                     
                     if attendance_image_url:
-                        # Ghi điểm danh
+                        # Record attendance
                         attendance_id = self.attendance_repo.upsert_daily_attendance(
                             match["user_id"],
                             today,
@@ -179,7 +179,7 @@ class AttendanceService:
                             note
                         )
                         
-                        # Lấy thông tin attendance record
+                        # Get attendance record information
                         attendance_record = self.attendance_repo.get_attendance_by_user_and_date(
                             match["user_id"],
                             today
@@ -220,15 +220,15 @@ class AttendanceService:
                 "success": True,
                 "date": today,
                 "results": results,
-                "message": f"Xử lý {len(results)} kết quả"
+                "message": f"Processed {len(results)} results"
             }
             
         except Exception as e:
             logger.log_error("Multi attendance marking error")
-            return {"success": False, "error": f"Lỗi điểm danh: {str(e)}"}
+            return {"success": False, "error": f"Attendance error: {str(e)}"}
     
     def get_daily_attendance(self, attendance_date: str, limit: int = 100, class_id: str = None) -> Dict[str, Any]:
-        # Lấy danh sách điểm danh theo ngày
+        # Get attendance list by date
         try:
             records = self.attendance_repo.get_attendance_by_date(attendance_date, limit)
             
@@ -262,10 +262,10 @@ class AttendanceService:
             
         except Exception as e:
             logger.log_error("Get daily attendance error")
-            return {"success": False, "error": f"Lỗi lấy danh sách: {str(e)}"}
+            return {"success": False, "error": f"Error getting list: {str(e)}"}
     
     def get_user_attendance_history(self, user_id: str, limit: int = 50) -> Dict[str, Any]:
-        # Lấy lịch sử điểm danh của học sinh
+        # Get student attendance history
         try:
             records = self.attendance_repo.get_user_attendance_history(user_id, limit)
             
@@ -291,10 +291,10 @@ class AttendanceService:
             
         except Exception as e:
             logger.log_error("Get user attendance error", user_id=user_id)
-            return {"success": False, "error": f"Lỗi lấy lịch sử: {str(e)}"}
+            return {"success": False, "error": f"Error getting history: {str(e)}"}
     
     def mark_absent_batch(self, user_ids: List[str], attendance_date: str) -> Dict[str, Any]:
-        # Đánh dấu vắng hàng loạt
+        # Mark absent in bulk
         try:
             created_count = self.attendance_repo.mark_absent_batch(user_ids, attendance_date)
             
@@ -302,9 +302,9 @@ class AttendanceService:
                 "success": True,
                 "date": attendance_date,
                 "created": created_count,
-                "message": f"Đánh dấu {created_count} học sinh vắng mặt"
+                "message": f"Mark {created_count} students absent"
             }
             
         except Exception as e:
             logger.log_error("Batch absent marking error")
-            return {"success": False, "error": f"Lỗi đánh dấu vắng: {str(e)}"}
+            return {"success": False, "error": f"Error marking absent: {str(e)}"}

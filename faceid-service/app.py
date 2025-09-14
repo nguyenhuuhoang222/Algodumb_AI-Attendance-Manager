@@ -140,7 +140,7 @@ def compare_faces():
                 "message": "Missing embeddings in request data"
             }), 400
         
-        # Get optional threshold from request - Tăng ngưỡng để kiểm tra trùng mặt chặt chẽ hơn
+        # Get optional threshold from request - Increase threshold to check face matching more strictly
         from thresholds_config import FACE_SIMILARITY_THRESHOLD
         threshold = float(data.get('threshold', FACE_SIMILARITY_THRESHOLD))
         

@@ -31,7 +31,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-The service will run on `http://localhost:5000/` by default.
+The service will run on `http://localhost:5001/` by default.
 
 ## API Endpoints
 
@@ -67,7 +67,7 @@ The service will run on `http://localhost:5000/` by default.
 import requests
 
 with open("test_images/person1.jpg", "rb") as f:
-    r = requests.post("http://localhost:5000/encode-face", files={"image": f})
+    r = requests.post("http://localhost:5001/encode-face", files={"image": f})
 print(r.json())
 ```
 
@@ -80,7 +80,7 @@ import requests
 embedding1 = "..."  # base64 string
 embedding2 = "..."
 
-r = requests.post("http://localhost:5000/compare-faces", json={
+r = requests.post("http://localhost:5001/compare-faces", json={
     "embedding1": embedding1,
     "embedding2": embedding2
 })

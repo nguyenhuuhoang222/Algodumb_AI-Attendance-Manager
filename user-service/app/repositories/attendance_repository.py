@@ -5,20 +5,20 @@ from ..models.user_models import AttendanceRecord
 from ..config.settings import Config
 
 class AttendanceRepository:
-    # Repository xử lý dữ liệu Attendance trong Firestore
+    # Repository handling Attendance data in Firestore
 
     def __init__(self):
         self.db = firestore.Client(project=Config.FIREBASE_PROJECT_ID)
         self.collection = "attendance"
     
     def create_attendance_record(self, attendance_data: dict) -> str:
-        # Tạo bản ghi điểm danh mới
+        # Create new attendance record
         doc_ref = self.db.collection(self.collection).document()
         doc_ref.set(attendance_data)
         return doc_ref.id
     
     def get_attendance_by_user_and_date(self, user_id: str, attendance_date: str) -> Optional[AttendanceRecord]:
-        # Lấy bản ghi điểm danh theo user và ngày
+        # Get attendance record by user and date
         query = (self.db.collection(self.collection)
                  .where("user_id", "==", user_id)
                  .where("date", "==", attendance_date)
@@ -31,13 +31,13 @@ class AttendanceRepository:
     
     def upsert_daily_attendance(self, user_id: str, attendance_date: str, status: str, 
                                captured_image: str, note: str = None) -> str:
-        # Upsert điểm danh theo ngày (idempotent)
+        # Upsert attendance by date (idempotent)
         try:
-            # Tìm bản ghi hiện tại
+            # Find current record
             existing_record = self.get_attendance_by_user_and_date(user_id, attendance_date)
             
             if existing_record:
-                # Cập nhật bản ghi hiện tại
+                # Update current record
                 update_data = {
                     "last_seen": datetime.utcnow(),
                     "captures": existing_record.captures + 1,
@@ -45,7 +45,7 @@ class AttendanceRepository:
                     "note": note or existing_record.note
                 }
                 
-                # Tìm document ID của bản ghi hiện tại
+                # Find document ID of current record
                 query = (self.db.collection(self.collection)
                          .where("user_id", "==", user_id)
                          .where("date", "==", attendance_date)
@@ -56,7 +56,7 @@ class AttendanceRepository:
                     doc.reference.update(update_data)
                     return doc.id
             else:
-                # Tạo bản ghi mới
+                # Create new record
                 now = datetime.utcnow()
                 attendance_data = {
                     "user_id": user_id,
@@ -75,10 +75,10 @@ class AttendanceRepository:
                 return doc_ref.id
                 
         except Exception as e:
-            raise Exception(f"Lỗi upsert điểm danh: {str(e)}")
+            raise Exception(f"Upsert attendance error: {str(e)}")
     
     def get_attendance_by_date(self, attendance_date: str, limit: int = 100) -> List[AttendanceRecord]:
-        # Lấy danh sách điểm danh theo ngày
+        # Get attendance list by date
         query = (self.db.collection(self.collection)
                  .where("date", "==", attendance_date)
                  .order_by("last_seen", direction=firestore.Query.DESCENDING)
@@ -88,7 +88,7 @@ class AttendanceRepository:
         return [AttendanceRecord.from_dict(doc.to_dict(), doc.id) for doc in docs]
     
     def get_user_attendance_history(self, user_id: str, limit: int = 50) -> List[AttendanceRecord]:
-        # Lấy lịch sử điểm danh của user
+        # Get user attendance history
         query = (self.db.collection(self.collection)
                  .where("user_id", "==", user_id)
                  .order_by("date", direction=firestore.Query.DESCENDING)
@@ -98,12 +98,12 @@ class AttendanceRepository:
         return [AttendanceRecord.from_dict(doc.to_dict(), doc.id) for doc in docs]
     
     def mark_absent_batch(self, user_ids: List[str], attendance_date: str) -> int:
-        # Đánh dấu vắng hàng loạt cho danh sách user
+        # Mark absent in bulk for user list
         created_count = 0
         batch = self.db.batch()
         
         for user_id in user_ids:
-            # Kiểm tra xem đã có bản ghi điểm danh chưa
+            # Check if attendance record already exists
             existing = self.get_attendance_by_user_and_date(user_id, attendance_date)
             if not existing:
                 doc_ref = self.db.collection(self.collection).document()
@@ -115,7 +115,7 @@ class AttendanceRepository:
                     "last_seen": datetime.utcnow(),
                     "captures": 0,
                     "captured_image": "",
-                    "note": "Đánh dấu vắng tự động",
+                    "note": "Automatically marked absent",
                     "created_at": datetime.utcnow()
                 }
                 batch.set(doc_ref, attendance_data)
@@ -127,7 +127,7 @@ class AttendanceRepository:
         return created_count
     
     def get_attendance_stats(self, start_date: str, end_date: str) -> dict:
-        # Lấy thống kê điểm danh trong khoảng thời gian
+        # Get attendance statistics in time range
         query = (self.db.collection(self.collection)
                  .where("date", ">=", start_date)
                  .where("date", "<=", end_date))

@@ -9,7 +9,7 @@ attendance_service = AttendanceService()
 
 @attendance_bp.route("/attendance/mark", methods=["POST"])
 def mark_attendance():
-    """Điểm danh cho 1 khuôn mặt"""
+    """Mark attendance for 1 face"""
     start_time = time.time()
     
     try:
@@ -43,7 +43,7 @@ def mark_attendance():
         response_time = (time.time() - start_time) * 1000
         logger.log_error(str(e))
         logger.log_response(status_code=500, response_time=response_time)
-        return jsonify({"success": False, "error": "Lỗi server"}), 500
+        return jsonify({"success": False, "error": "Server error"}), 500
 
 @attendance_bp.route("/attendance/mark-multi", methods=["POST"])
 def mark_attendance_multi():
@@ -59,7 +59,7 @@ def mark_attendance_multi():
         
         # 2. Get optional parameters
         note = request.form.get('note')
-        class_id = request.form.get('classId')  # Hỗ trợ classId
+        class_id = request.form.get('classId')  # Support classId
         
         # 3. Call service
         result = attendance_service.mark_attendance_multi(
@@ -80,20 +80,20 @@ def mark_attendance_multi():
         response_time = (time.time() - start_time) * 1000
         logger.log_error(str(e))
         logger.log_response(status_code=500, response_time=response_time)
-        return jsonify({"success": False, "error": "Lỗi server"}), 500
+        return jsonify({"success": False, "error": "Server error"}), 500
 
 @attendance_bp.route("/attendance/daily", methods=["GET"])
 def get_daily_attendance():
-    # Lấy danh sách điểm danh theo ngày
+    # Get attendance list by date
     start_time = time.time()
     
     try:
         attendance_date = request.args.get('date')
         if not attendance_date:
-            return jsonify({"success": False, "error": "Thiếu tham số date"}), 400
+            return jsonify({"success": False, "error": "Missing date parameter"}), 400
         
         limit = int(request.args.get('limit', 100))
-        class_id = request.args.get('classId')  # Hỗ trợ classId
+        class_id = request.args.get('classId')  # Support classId
         
         result = attendance_service.get_daily_attendance(attendance_date, limit, class_id)
         
@@ -109,11 +109,11 @@ def get_daily_attendance():
         response_time = (time.time() - start_time) * 1000
         logger.log_error(str(e))
         logger.log_response(status_code=500, response_time=response_time)
-        return jsonify({"success": False, "error": "Lỗi server"}), 500
+        return jsonify({"success": False, "error": "Server error"}), 500
 
 @attendance_bp.route("/attendance/user/<user_id>", methods=["GET"])
 def get_user_attendance_history(user_id):
-    # Lấy lịch sử điểm danh của học sinh
+    # Get student attendance history
     start_time = time.time()
     
     try:
@@ -134,23 +134,23 @@ def get_user_attendance_history(user_id):
         response_time = (time.time() - start_time) * 1000
         logger.log_error(str(e))
         logger.log_response(status_code=500, response_time=response_time)
-        return jsonify({"success": False, "error": "Lỗi server"}), 500
+        return jsonify({"success": False, "error": "Server error"}), 500
 
 @attendance_bp.route("/attendance/absent-batch", methods=["POST"])
 def mark_absent_batch():
-    # Đánh dấu vắng hàng loạt
+    # Mark absent in bulk
     start_time = time.time()
     
     try:
         data = request.get_json()
         if not data or 'user_ids' not in data or 'date' not in data:
-            return jsonify({"success": False, "error": "Thiếu user_ids hoặc date"}), 400
+            return jsonify({"success": False, "error": "Missing user_ids or date"}), 400
         
         user_ids = data['user_ids']
         attendance_date = data['date']
         
         if not isinstance(user_ids, list) or len(user_ids) == 0:
-            return jsonify({"success": False, "error": "user_ids phải là danh sách không rỗng"}), 400
+            return jsonify({"success": False, "error": "user_ids must be non-empty list"}), 400
         
         result = attendance_service.mark_absent_batch(user_ids, attendance_date)
         
@@ -166,11 +166,11 @@ def mark_absent_batch():
         response_time = (time.time() - start_time) * 1000
         logger.log_error(str(e))
         logger.log_response(status_code=500, response_time=response_time)
-        return jsonify({"success": False, "error": "Lỗi server"}), 500
+        return jsonify({"success": False, "error": "Server error"}), 500
 
 @attendance_bp.route("/attendance/stats", methods=["GET"])
 def get_attendance_stats():
-    # Lấy thống kê điểm danh
+    # Get attendance statistics
     start_time = time.time()
     
     try:
@@ -178,7 +178,7 @@ def get_attendance_stats():
         end_date = request.args.get('end_date')
         
         if not start_date or not end_date:
-            return jsonify({"success": False, "error": "Thiếu start_date hoặc end_date"}), 400
+            return jsonify({"success": False, "error": "Missing start_date or end_date"}), 400
         
         # This would need to be implemented in AttendanceService
         # For now, return a placeholder
@@ -203,4 +203,4 @@ def get_attendance_stats():
         response_time = (time.time() - start_time) * 1000
         logger.log_error(str(e))
         logger.log_response(status_code=500, response_time=response_time)
-        return jsonify({"success": False, "error": "Lỗi server"}), 500
+        return jsonify({"success": False, "error": "Server error"}), 500
