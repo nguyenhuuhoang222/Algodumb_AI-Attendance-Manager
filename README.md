@@ -120,7 +120,7 @@ pip install -r requirements.txt
 
 # (Optional) configure Firebase
 # set GOOGLE_APPLICATION_CREDENTIALS, FIREBASE_PROJECT_ID
-
+#Filebase code already be applied in zip file for Techwiz 6 
 python run.py
 ```
 
