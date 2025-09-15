@@ -1,3 +1,18 @@
+<<<<<<< HEAD
+=======
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+
+# Firebase service account keys
+*.json
+!package.json
+!package-lock.json
+!tsconfig.json
+
+>>>>>>> clean-branch
 # Python
 __pycache__/
 *.py[cod]
@@ -19,16 +34,28 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+<<<<<<< HEAD
 
 # Virtual environment
 venv/
 env/
+=======
+MANIFEST
+
+# Virtual environments
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+>>>>>>> clean-branch
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+<<<<<<< HEAD
 
 # Data
 data/raw/
@@ -36,11 +63,29 @@ data/processed/
 *.pkl
 *.h5
 *.model
+=======
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+>>>>>>> clean-branch
 
 # Logs
 *.log
 logs/
 
+<<<<<<< HEAD
 # OS
 .DS_Store
 Thumbs.db
+=======
+# Temporary files
+*.tmp
+*.temp
+>>>>>>> clean-branch

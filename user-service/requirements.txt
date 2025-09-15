@@ -1,10 +1,28 @@
 Flask==3.0.2
+<<<<<<< HEAD
 requests==2.31.0
 firebase-admin==6.4.0
 opencv-python==4.9.0
 numpy==1.26.4
+=======
+flask-cors==4.0.0
+google-cloud-firestore==2.21.0
+google-cloud-storage==3.3.1
+requests==2.31.0
+numpy==1.26.4
+<<<<<<< HEAD
+>>>>>>> clean-branch
 pandas==2.2.1
 matplotlib==3.8.3
 tensorflow==2.15.0
 keras==2.15.0
+<<<<<<< HEAD
 torch==2.2.1
+=======
+torch==2.2.1
+pydantic==2.5.0
+=======
+opencv-python==4.9.0.80
+Pillow==10.2.0
+>>>>>>> 3486913fee80855a8b8bce9ab0e74324417a0c27
+>>>>>>> clean-branch
