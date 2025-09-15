@@ -35,7 +35,7 @@ def render_face_detection_test():
                         face_image_data = base64.b64decode(face_image_b64)
                         face_image = Image.open(io.BytesIO(face_image_data))
                         
-                        st.image(face_image, caption="Detected Face", use_column_width=True)
+                        st.image(face_image, caption="Detected Face", use_container_width=True)
                     
                     embedding = response.get('embedding', '')
                     if embedding:

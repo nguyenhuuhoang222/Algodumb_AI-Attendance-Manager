@@ -110,44 +110,17 @@ def render_auto_camera_instructions():
     st.markdown("""
     <div class="auto-camera-instructions">
         <div class="instruction-header">
-            <h4>Automatic Face Scan Instructions (5s + 0.8s Timer)</h4>
+            <h4> Attendance Scan Guide</h4>
         </div>
         <div class="instruction-list">
             <div class="instruction-item">
-                <span class="instruction-icon"></span>
-                <span>Place your face within the camera frame</span>
+                <span>1. Place your face in the frame</span>
             </div>
             <div class="instruction-item">
-                <span class="instruction-icon"></span>
-                <span>A 5-second timer will start when a face is detected</span>
+                <span>2. Wait for the green light and hold still</span>
             </div>
             <div class="instruction-item">
-                <span class="instruction-icon"></span>
-                <span>A 0.8-second check timer will verify red/green status</span>
-            </div>
-            <div class="instruction-item">
-                <span class="instruction-icon"></span>
-                <span>Wait for the status to change from red to green within 0.8s</span>
-            </div>
-            <div class="instruction-item">
-                <span class="instruction-icon"></span>
-                <span>Once green, hold still - the system will automatically capture the best image</span>
-            </div>
-            <div class="instruction-item">
-                <span class="instruction-icon"></span>
-                <span>Ensure good and clear lighting</span>
-            </div>
-            <div class="instruction-item">
-                <span class="instruction-icon"></span>
-                <span>Look directly at the camera</span>
-            </div>
-            <div class="instruction-item">
-                <span class="instruction-icon"></span>
-                <span>Remove masks and sunglasses</span>
-            </div>
-            <div class="instruction-item">
-                <span class="instruction-icon"></span>
-                <span>When green within 0.8s, the system will automatically capture and record attendance</span>
+                <span>3. System automatically scans and marks attendance</span>
             </div>
         </div>
     </div>

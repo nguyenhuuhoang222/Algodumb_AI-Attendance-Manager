@@ -28,6 +28,56 @@ def render_registration():
     </div>
     """, unsafe_allow_html=True)
     
+    # Display success notification if exists
+    if st.session_state.get('registration_success'):
+        success_data = st.session_state.registration_success
+        current_time = time.time()
+        
+        # Show notification for 5 seconds
+        if current_time - success_data.get('timestamp', 0) < 5:
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #28a745, #20c997); 
+                        color: white; padding: 20px; border-radius: 12px; 
+                        margin: 15px 0; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+                        border-left: 5px solid #155724; animation: slideIn 0.5s ease-out;">
+                <h4 style="margin: 0 0 15px 0; color: white; font-size: 1.3em;">
+                    Registration Successful
+                </h4>
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                    <p style="margin: 5px 0;"><strong>Student ID:</strong> {success_data.get('student_id', 'N/A')}</p>
+                    <p style="margin: 5px 0;"><strong>Full Name:</strong> {success_data.get('full_name', 'N/A')}</p>
+                    <p style="margin: 5px 0;"><strong>Class Name:</strong> {success_data.get('class_name', 'N/A')}</p>
+                    <p style="margin: 5px 0;"><strong>Username:</strong> {success_data.get('username', 'N/A')}</p>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            # Clear success notification after 5 seconds
+            st.session_state.registration_success = None
+    
+    # Display error notification if exists
+    if st.session_state.get('registration_error'):
+        error_data = st.session_state.registration_error
+        current_time = time.time()
+        
+        # Show notification for 5 seconds
+        if current_time - error_data.get('timestamp', 0) < 5:
+            error_display = error_data.get('error_msg', 'Registration failed')
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #dc3545, #c82333); 
+                        color: white; padding: 20px; border-radius: 12px; 
+                        margin: 15px 0; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+                        border-left: 5px solid #721c24; animation: slideIn 0.5s ease-out;">
+                <h4 style="margin: 0 0 15px 0; color: white; font-size: 1.3em;">
+                    Registration Failed
+                </h4>
+                <p style="margin: 0; color: white; font-size: 1.1em;">{error_display}</p>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            # Clear error notification after 5 seconds
+            st.session_state.registration_error = None
+    
     session_manager = SessionManager()
     
     st.markdown("### Step 1: Student Information")
@@ -60,9 +110,6 @@ def render_registration():
             st.rerun()
     
     st.markdown("### Step 2: Automatic Photo Capture")
-    st.info("Continuous Workflow: The camera will run continuously from one person to the next. Just fill out a new form for each person.")
-    st.success("Fully Automatic: The system will automatically capture photos and register when a suitable face is detected.")
-    st.warning("Failure Handling: If the scan fails, the system will output a specific error and reset the form, ready for the next person.")
     
     if st.session_state.get('start_camera', False):
         render_auto_camera_section()
@@ -85,7 +132,7 @@ def render_registration():
         
         col1, col2, col3 = st.columns([1, 2, 1])
         with col2:
-            st.image(img, caption="Captured Face Image", use_column_width=True)
+            st.image(img, caption="Captured Face Image", use_container_width=True)
         
         handle_registration_submission()
     
@@ -118,7 +165,6 @@ def render_registration():
                 st.session_state.timer_start_requested = True
                 st.rerun()
     
-    render_registration_help()
 
 def process_video_stream(ctx_reg):
     if not ctx_reg or not ctx_reg.state.playing:
@@ -145,7 +191,7 @@ def process_video_stream(ctx_reg):
             frame_bytes = buffer.tobytes()
             st.session_state.reg_best_bytes = frame_bytes
             
-            st.image(best_frame, caption="Captured Face", use_column_width=True)
+            st.image(best_frame, caption="Captured Face", use_container_width=True)
             st.success("Face captured successfully!")
             
             try:
@@ -178,35 +224,17 @@ def render_auto_camera_section():
     st.markdown("""
     <div class="auto-camera-instructions">
         <div class="instruction-header">
-            <h4>Automatic Photo Capture Instructions (5s + 0.8s Timer)</h4>
+            <h4> Photo Capture Guide</h4>
         </div>
         <div class="instruction-list">
             <div class="instruction-item">
-                <span>Place your face within the camera frame</span>
+                <span>1. Place your face in the frame</span>
             </div>
             <div class="instruction-item">
-                <span>A 5-second timer will start when a face is detected</span>
+                <span>2. Wait for the green light and hold still</span>
             </div>
             <div class="instruction-item">
-                <span>A 0.8-second check timer will verify red/green status</span>
-            </div>
-            <div class="instruction-item">
-                <span>Wait for the status to change from red to green within 0.8s</span>
-            </div>
-            <div class="instruction-item">
-                <span>Once green, hold still - the system will automatically capture the best image</span>
-            </div>
-            <div class="instruction-item">
-                <span>Ensure good and clear lighting</span>
-            </div>
-            <div class="instruction-item">
-                <span>Look straight into the camera</span>
-            </div>
-            <div class="instruction-item">
-                <span>Remove masks and sunglasses</span>
-            </div>
-            <div class="instruction-item">
-                <span>When it turns green within 0.8s, the system will automatically capture and register</span>
+                <span>3. System automatically captures and registers</span>
             </div>
         </div>
     </div>
@@ -318,7 +346,6 @@ def render_auto_camera_section():
                             st.rerun()
                 else:
                     st.warning("Time's up!")
-                    st.warning("The 5-second timer has expired. Please try again.")
                     
                     col1, col2, col3, col4 = st.columns(4)
                     
@@ -571,7 +598,7 @@ def render_face_capture_section():
             
             col1, col2, col3 = st.columns([1, 2, 1])
             with col2:
-                st.image(img, caption="Captured Face Image", use_column_width=True)
+                st.image(img, caption="Captured Face Image", use_container_width=True)
     else:
         st.markdown("""
         <div class="camera-error">
@@ -686,7 +713,7 @@ def handle_best_frame_captured_state(processor, ctx_reg, capture_remaining):
 
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.image(best_frame, caption="Captured Face Image", use_column_width=True)
+        st.image(best_frame, caption="Captured Face Image", use_container_width=True)
 
     st.info("Registering student...")
     
@@ -949,12 +976,14 @@ def handle_registration_submission():
                 """, unsafe_allow_html=True)
                 
                 st.success("Registration successful! Form has been reset, ready for the next person.")
-                st.info("Camera continues to operate for the next person...")
                 
                 reset_registration_states()
                 st.session_state.reg_ready = False
                 st.session_state.start_camera = True
                 st.session_state.registration_data = {}
+                
+                # Add delay before rerun to show notification
+                time.sleep(4)  # 4 second delay
                 st.rerun()
             else:
                 error_code = response.get('error', 'UNKNOWN_ERROR')
@@ -974,12 +1003,14 @@ def handle_registration_submission():
                     st.error(f"Registration failed: {error_msg}")
                 
                 st.warning("Registration failed! Form has been reset, ready for the next person.")
-                st.info("Camera continues to operate for the next person...")
                 
                 reset_registration_states()
                 st.session_state.reg_ready = False
                 st.session_state.start_camera = True
                 st.session_state.registration_data = {}
+                
+                # Add delay before rerun to show notification
+                time.sleep(4)  # 4 second delay
                 st.rerun()
                 
         except Exception as e:
@@ -991,50 +1022,13 @@ def handle_registration_submission():
             else:
                 st.error(f"Registration error: {error_str}")
             
-            st.error("System error! Form has been reset, ready for the next person.")
-            st.info("Camera continues to operate for the next person...")
+            st.error("Form has been reset, ready for the next person.")
             
             reset_registration_states()
             st.session_state.reg_ready = False
             st.session_state.start_camera = True
             logger.error(f"Registration error: {str(e)}")
+            
+            # Add delay before rerun to show notification
+            time.sleep(4)  # 4 second delay
             st.rerun()
-
-def render_registration_help():
-    with st.expander("Registration Guide", expanded=False):
-        col1, col2 = st.columns(2)
-        
-        with col1:
-            st.markdown("""
-            ### Registration Process
-            
-            1. **Fill in student information** (Full Name, Username)
-            2. **Student ID is auto-generated** (e.g., SV12345)
-            3. **Click "Start Camera Capture"** to activate the camera
-            4. **Place your face in the camera** with good lighting
-            5. **Wait for the green border to appear** - The system automatically detects
-            6. **Automatic capture and registration** - Checks for duplicates and registers
-            7. **Form automatically resets** for the next person
-            """)
-        
-        with col2:
-            st.markdown("""
-            ### Important Notes
-            
-            - **Do not wear a mask** when taking a photo
-            - **Ensure sufficient lighting** and a clear face
-            - **Look straight into the camera** and hold still
-            - **Remove glasses, hats** covering the face
-            - **Camera runs continuously** for multiple people
-            """)
-        
-        st.markdown("""
-        ### Troubleshooting
-        
-        - **Face not detected**: Adjust lighting
-        - **Low quality**: Move closer to the camera
-        - **Liveness failed**: Move your head slightly
-        - **Mask detected**: Remove any face coverings
-        - **Duplicate username**: Choose a different username
-        - **Face already registered**: Use a different account
-        """)

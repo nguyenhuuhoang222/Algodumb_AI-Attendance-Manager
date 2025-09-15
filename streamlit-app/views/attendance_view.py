@@ -9,8 +9,7 @@ from components.video_processor import ReadinessProcessor
 from components.simple_camera import render_simple_camera
 from components.attendance_components import (
     render_attendance_status, render_timer_status, render_status_indicators,
-    render_color_status, render_camera_controls, render_auto_camera_instructions,
-    render_attendance_help
+    render_color_status, render_camera_controls, render_auto_camera_instructions
 )
 from handlers.attendance_handlers import (
     handle_attendance_submission, handle_continuous_mode
@@ -50,13 +49,59 @@ def render_attendance():
     if 'start_camera' not in st.session_state:
         st.session_state.start_camera = True
     
+    # Display success notification if exists
+    if st.session_state.get('attendance_success'):
+        success_data = st.session_state.attendance_success
+        current_time = time.time()
+        
+        # Show notification for 5 seconds
+        if current_time - success_data.get('timestamp', 0) < 5:
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #28a745, #20c997); 
+                        color: white; padding: 20px; border-radius: 12px; 
+                        margin: 15px 0; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+                        border-left: 5px solid #155724; animation: slideIn 0.5s ease-out;">
+                <h4 style="margin: 0 0 15px 0; color: white; font-size: 1.3em;">
+                    Attendance Recorded
+                </h4>
+                <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 8px;">
+                    <p style="margin: 5px 0;"><strong>Student ID:</strong> {success_data.get('student_id', 'N/A')}</p>
+                    <p style="margin: 5px 0;"><strong>Name:</strong> {success_data.get('student_name', 'N/A')}</p>
+                    <p style="margin: 5px 0;"><strong>Action:</strong> {success_data.get('action', 'N/A').title()}</p>
+                </div>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            # Clear success notification after 5 seconds
+            st.session_state.attendance_success = None
+    
+    # Display error notification if exists
+    if st.session_state.get('attendance_error'):
+        error_data = st.session_state.attendance_error
+        current_time = time.time()
+        
+        # Show notification for 5 seconds
+        if current_time - error_data.get('timestamp', 0) < 5:
+            error_display = error_data.get('error_msg', 'Attendance failed')
+            st.markdown(f"""
+            <div style="background: linear-gradient(135deg, #dc3545, #c82333); 
+                        color: white; padding: 20px; border-radius: 12px; 
+                        margin: 15px 0; box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+                        border-left: 5px solid #721c24; animation: slideIn 0.5s ease-out;">
+                <h4 style="margin: 0 0 15px 0; color: white; font-size: 1.3em;">
+                    Attendance Failed
+                </h4>
+                <p style="margin: 0; color: white; font-size: 1.1em;">{error_display}</p>
+            </div>
+            """, unsafe_allow_html=True)
+        else:
+            # Clear error notification after 5 seconds
+            st.session_state.attendance_error = None
+
     st.markdown("### Step 1: Attendance Status")
     render_attendance_status()
     
     st.markdown("### Step 2: Automatic Face Scan")
-    st.info("**Continuous Workflow**: The camera will run continuously from one person to another.")
-    st.success("**Fully Automatic**: The system will automatically scan and mark attendance when a suitable face is detected.")
-    st.warning("**Failure Handling**: If the scan fails, the system will output a specific error and reset to be ready for the next person.")
     
     if st.session_state.get('start_camera', False):
         render_auto_camera_section()
@@ -85,13 +130,12 @@ def render_attendance():
             
             col1, col2, col3 = st.columns([1, 2, 1])
             with col2:
-                st.image(img, caption="Captured Face Image", use_column_width=True)
+                st.image(img, caption="Captured Face Image", use_container_width=True)
             
             handle_attendance_submission()
         
         render_camera_controls()
     
-    render_attendance_help()
 
 def render_auto_camera_section():
     render_auto_camera_instructions()
@@ -179,7 +223,6 @@ def render_auto_camera_section():
                     st.error("Click the 'Restart Camera' button to try again.")
                 else:
                     st.warning("**Time's up!**")
-                    st.warning("The 5-second timer has expired. Please try again.")
             else:
                 st.warning("Camera has stopped. Click the button below to restart.")
             
@@ -227,7 +270,7 @@ def process_auto_capture(ctx_att):
         
             col1, col2, col3 = st.columns([1, 2, 1])
             with col2:
-                st.image(best_frame, caption="Captured Face Image", use_column_width=True)
+                st.image(best_frame, caption="Captured Face Image", use_container_width=True)
             
             st.info("Marking student attendance...")
             handle_attendance_submission()
@@ -241,7 +284,6 @@ def process_auto_capture(ctx_att):
             st.error(f"{status_text}")
             st.warning(f"{hint_text}")
             
-            st.warning("Scan failed! The system will automatically reset...")
             
             from handlers.attendance_handlers import auto_continue_workflow
             auto_continue_workflow()

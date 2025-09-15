@@ -75,12 +75,12 @@ def render_simple_camera():
         frame = camera.get_frame()
         if frame is not None:
             frame_rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            st.image(frame_rgb, caption="Live Camera Feed", use_column_width=True)
+            st.image(frame_rgb, caption="Live Camera Feed", use_container_width=True)
         
         if 'captured_photo' in st.session_state:
             st.markdown("#### Captured Photo")
             captured_rgb = cv2.cvtColor(st.session_state.captured_photo, cv2.COLOR_BGR2RGB)
-            st.image(captured_rgb, caption="Captured Photo", use_column_width=True)
+            st.image(captured_rgb, caption="Captured Photo", use_container_width=True)
             
             _, buffer = cv2.imencode('.jpg', st.session_state.captured_photo)
             photo_bytes = buffer.tobytes()

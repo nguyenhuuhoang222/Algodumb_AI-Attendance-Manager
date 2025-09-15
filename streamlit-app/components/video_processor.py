@@ -53,11 +53,11 @@ class ReadinessProcessor(VideoProcessorBase):
             self.mask_skin_ratio_threshold = MASK_SKIN_RATIO_THRESHOLD
             self.mask_consecutive_frames = MASK_CONSECUTIVE_FRAMES
         except ImportError:
-            # Fallback to hardcoded values - Increase mask detection threshold
+            # Fallback to hardcoded values - Tăng ngưỡng phát hiện khẩu trang
             self.readiness_threshold = 0.05
             self.motion_frames_required = 2
-            self.mask_skin_ratio_threshold = 0.25  # Increased from 0.15 to detect easier
-            self.mask_consecutive_frames = 3       # Lowered from 5 to detect faster
+            self.mask_skin_ratio_threshold = 0.25  # Tăng từ 0.15 để phát hiện dễ hơn
+            self.mask_consecutive_frames = 3       # Hạ từ 5 để phát hiện nhanh hơn
         
         self.prev_gray = None
         self.motion_ok_consec = 0
@@ -219,7 +219,10 @@ class ReadinessProcessor(VideoProcessorBase):
                     self.check_timer_active = False
                     logger.info("GREEN and best frame obtained - stopping 0.8s timer, moving to next step!")
                 
-                if self.get_remaining_time() <= 0:
+                # Check timer expiration with improved logic
+                remaining_time = self.get_remaining_time()
+                
+                if remaining_time <= 0:
                     if not self.timer_expired:
                         self.timer_expired = True
                         self.status_text = "Scan time expired! Please try again."
@@ -227,13 +230,15 @@ class ReadinessProcessor(VideoProcessorBase):
                         self.color_status = "red"
                         logger.warning("Timer expired - 5 seconds completed")
                     else:
+                        # Auto-reset after 3 seconds of expiration
                         if not hasattr(self, 'timer_reset_time'):
                             self.timer_reset_time = time.time()
-                        elif time.time() - self.timer_reset_time > 2.0:
+                        elif time.time() - self.timer_reset_time > 3.0:
                             self._reset_timer_for_next_person()
-                            logger.info("Timer reset for next person")
+                            logger.info("Timer auto-reset for next person")
                 
-                elif self.get_remaining_time() < 0.5:
+                elif remaining_time < 0.5 and not self.timer_expired:
+                    # Only check conditions if timer is about to expire and not already expired
                     if not self.liveness_ok:
                         self.timer_expired = True
                         self.status_text = "Liveness check failed! Please move your head slightly."
